@@ -31,10 +31,9 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		JButton handleUsers = new JButton("Gestisci Utenza");
 		handleUsers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				ScreenController.setScreen("USERMANAGEMENTSCREEN");
 			}
 		});
-		handleUsers.setFocusable(false);
 		handleUsers.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		handleUsers.setBackground(Color.BLACK);
 		handleUsers.setForeground(Color.WHITE);
@@ -47,7 +46,6 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 				ScreenController.setPreviousScreen(screenName);
 			}
 		});
-		btnIndietro.setFocusable(false);
 		btnIndietro.setForeground(Color.WHITE);
 		btnIndietro.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		btnIndietro.setBackground(Color.BLACK);
@@ -60,7 +58,6 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 				
 			}
 		});
-		btnGestisciRecensioni.setFocusable(false);
 		btnGestisciRecensioni.setForeground(Color.WHITE);
 		btnGestisciRecensioni.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		btnGestisciRecensioni.setBackground(Color.BLACK);
@@ -76,7 +73,7 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		card.add(moderatorPanelLabel);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\workspace\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		

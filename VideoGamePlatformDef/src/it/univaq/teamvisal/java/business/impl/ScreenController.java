@@ -35,7 +35,8 @@ public class ScreenController {
 	private final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
 	private final static String USERPROFILESCREEN = "USERPROFILESCREEN";
 	private final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
-	
+	private final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
+	private final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
 	private LogoutController logoutController;
 	
 	
@@ -126,6 +127,12 @@ public class ScreenController {
 			break;
 		case MODERATORFUNCTIONSSCREEN:
 			screenManagerLayout.show(screenManager, USERHOMEPAGESCREEN);
+			break;
+		case USERMANAGEMENTSCREEN:
+			screenManagerLayout.show(screenManager, MODERATORFUNCTIONSSCREEN);
+		    break;
+		case MODERATORREQUESTSSCREEN:
+			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
 			break;
 		default:
 			break;
