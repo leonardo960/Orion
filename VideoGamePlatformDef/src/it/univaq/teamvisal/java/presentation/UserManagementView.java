@@ -28,6 +28,11 @@ public class UserManagementView extends ScreenViewSuper implements ScreenView {
 		card.setLayout(null);
 		
 		JButton demote = new JButton("Degrada Moderatori");
+		demote.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		demote.setFocusable(false);
 		demote.setBackground(Color.BLACK);
 		demote.setForeground(Color.WHITE);

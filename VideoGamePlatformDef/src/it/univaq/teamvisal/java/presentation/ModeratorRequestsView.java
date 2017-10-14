@@ -61,6 +61,7 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		        if (evt.getClickCount() == 2) {
 		            // Double-click detected
 		        	JTextArea msg = new JTextArea(modRequests.get(list.getSelectedValue()));
+		        	//La linea di codice seguente non funziona
 		        	msg.setBounds(msg.getX(), msg.getY(), 200, 100);
 		        	msg.setLineWrap(true);
 		        	msg.setWrapStyleWord(true);

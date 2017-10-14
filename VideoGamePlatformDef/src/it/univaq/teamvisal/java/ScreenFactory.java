@@ -1,6 +1,7 @@
 package it.univaq.teamvisal.java;
 
 import it.univaq.teamvisal.java.presentation.LoginScreenView;
+import it.univaq.teamvisal.java.presentation.ModeratorDerankView;
 import it.univaq.teamvisal.java.presentation.ModeratorFunctionsView;
 import it.univaq.teamvisal.java.presentation.ModeratorRegistrationView;
 import it.univaq.teamvisal.java.presentation.ModeratorRequestsView;
@@ -20,6 +21,7 @@ public class ScreenFactory {
 	private final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
 	private final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
 	private final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
+	private final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
 	
 	public static ScreenView produceScreen(String screenType){
 		switch(screenType){
@@ -41,6 +43,8 @@ public class ScreenFactory {
 			return new UserManagementView();
 		case MODERATORREQUESTSSCREEN:
 			return new ModeratorRequestsView();
+		case MODERATORDERANKSCREEN:
+			return new ModeratorDerankView();
 		default:
 			return null;
 		}
