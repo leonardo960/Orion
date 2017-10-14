@@ -82,6 +82,9 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		JButton btnApprova = new JButton("Approva");
 		btnApprova.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(list.isSelectionEmpty()){
+					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima l'utente nella lista.");
+			}else{
 				try {
 					JDBCUserManager.manageRequest(list.getSelectedValue(), true);
 					JOptionPane.showMessageDialog(card, "Richiesta approvata con successo.");
@@ -93,6 +96,7 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 					}else if(e1 instanceof SQLException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: problemi con il database.");
 						ScreenController.setPreviousScreen(screenName);
+						}
 					}
 				}
 			}

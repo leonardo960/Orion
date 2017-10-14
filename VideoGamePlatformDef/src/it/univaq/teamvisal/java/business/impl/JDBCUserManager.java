@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
@@ -239,15 +241,46 @@ public class JDBCUserManager {
 		statement.executeUpdate();
 		
 		if(approved){
-			String sql2 = "update table user set type = 'M' where username = ?";
-			PreparedStatement statement2 = con.prepareStatement(sql);
-			statement.setString(1, username);
-			statement.executeUpdate();
+			String sql2 = "update user set type = 'M' where username = ?";
+			PreparedStatement statement2 = con.prepareStatement(sql2);
+			statement2.setString(1, username);
+			statement2.executeUpdate();
 			statement2.close();
 		}
 		
 		con.close();
 		statement.close();
+	}
+	public static List<String> getModerators() throws DatabaseConnectionException, SQLException{
+		List<String> list = new LinkedList<String>();
+		
+		Connection con = dbConnect();
+		String sql = "select * from user where type = 'M'";
+		Statement statement = con.createStatement();
+		
+		ResultSet rs = statement.executeQuery(sql);
+		
+		while(rs.next()){
+			list.add(rs.getString("username") + " - " + rs.getString("nome") + " " + rs.getString("cognome"));
+		}
+		
+		rs.close();
+		statement.close();
+		con.close();
+		
+		
+		return list;
+	}
+	
+	public static void derankModerator(String username) throws DatabaseConnectionException, SQLException{
+		Connection con = dbConnect();
+		String sql = "update user set type = 'B' where username = ?";
+		PreparedStatement statement = con.prepareStatement(sql);
+		statement.setString(1, username);
+		statement.executeUpdate();
+		
+		statement.close();
+		con.close();
 	}
 	
 }

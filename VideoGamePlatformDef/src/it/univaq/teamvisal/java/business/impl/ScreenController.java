@@ -137,7 +137,7 @@ public class ScreenController {
 			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
 			break;
 		case MODERATORDERANKSCREEN:
-			screenManagerLayout.show(screenManager, MODERATORDERANKSCREEN);
+			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
 		default:
 			break;
 		}

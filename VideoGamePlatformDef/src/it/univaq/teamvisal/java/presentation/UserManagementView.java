@@ -30,7 +30,8 @@ public class UserManagementView extends ScreenViewSuper implements ScreenView {
 		JButton demote = new JButton("Degrada Moderatori");
 		demote.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				ScreenController.setScreen("MODERATORDERANKSCREEN");
+				((ModeratorDerankView) ScreenController.getLoadedScreens().get("MODERATORDERANKSCREEN")).populateList();
 			}
 		});
 		demote.setFocusable(false);

@@ -2,23 +2,33 @@ package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
 
+import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
+import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
 
 import javax.swing.JLabel;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	
+	private JList<String> list;
+	private DefaultListModel model;
+	
+	private JPanel card;
 	public ModeratorDerankView(){
 		screenName = "MODERATORDERANKSCREEN";
 	}
@@ -28,10 +38,10 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	 */
 	@Override
 	public JPanel initialize() {
-		JPanel card = new JPanel();
+		card = new JPanel();
 		card.setLayout(null);
 		
-		JList list = new JList();
+		list = new JList();
 		list.setBackground(Color.BLACK);
 		list.setForeground(Color.WHITE);
 		list.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
@@ -60,6 +70,25 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 		card.add(derankModerators);
 		
 		JButton derank = new JButton("Degrada");
+		derank.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(list.isSelectionEmpty()){
+					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima l'utente nella lista.");
+				}else{
+					try {
+						JDBCUserManager.derankModerator(list.getSelectedValue().substring(0, list.getSelectedValue().indexOf(" ")));
+						JOptionPane.showMessageDialog(card, "L'utente selezionato è stato degradato correttamente.");
+						model.remove(list.getSelectedIndex());
+					} catch (DatabaseConnectionException | SQLException e1) {
+						if(e1 instanceof DatabaseConnectionException){
+							JOptionPane.showMessageDialog(card, "Impossibile degradare il moderatore selezionato: database offline.");
+						}else if(e1 instanceof SQLException){
+							JOptionPane.showMessageDialog(card, "Impossibile degradare il moderatore selezionato: problemi con il database.");
+						}
+					}
+				}
+			}
+		});
 		derank.setForeground(Color.WHITE);
 		derank.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		derank.setFocusable(false);
@@ -82,6 +111,23 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	}
 	
 	public void populateList(){
+		try {
+			List<String> stringList = JDBCUserManager.getModerators();
+			stringList.remove(JDBCUserManager.getCurrentUser().getUsername() + " - " + JDBCUserManager.getCurrentUser().getNome() + " " + JDBCUserManager.getCurrentUser().getCognome());
+			model = new DefaultListModel();
+			for(String s : stringList){
+				model.addElement(s);
+			}
+			list.setModel(model);
+		} catch (DatabaseConnectionException | SQLException e) {
+			if(e instanceof DatabaseConnectionException){
+				JOptionPane.showMessageDialog(card, "Impossibile caricare la lista dei moderatori: database offline.");
+				ScreenController.setPreviousScreen(screenName);
+			}else if(e instanceof SQLException){
+				JOptionPane.showMessageDialog(card, "Impossibile caricare la lista dei moderatori: problemi con il database.");
+				ScreenController.setPreviousScreen(screenName);
+			}
+		}
 		
 	}
 }
