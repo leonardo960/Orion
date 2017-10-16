@@ -29,6 +29,7 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		card.setLayout(null);
 		
 		JButton handleUsers = new JButton("Gestisci Utenza");
+		handleUsers.setFocusable(false);
 		handleUsers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ScreenController.setScreen("USERMANAGEMENTSCREEN");
@@ -41,6 +42,7 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		card.add(handleUsers);
 		
 		JButton btnIndietro = new JButton("Indietro");
+		btnIndietro.setFocusable(false);
 		btnIndietro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ScreenController.setPreviousScreen(screenName);
@@ -53,6 +55,7 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		card.add(btnIndietro);
 		
 		JButton btnGestisciRecensioni = new JButton("Gestisci Recensioni");
+		btnGestisciRecensioni.setFocusable(false);
 		btnGestisciRecensioni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

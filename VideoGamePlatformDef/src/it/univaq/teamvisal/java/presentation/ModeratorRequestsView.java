@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 import java.awt.Font;
@@ -30,6 +32,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView {
 	private JList<String> list;
@@ -61,12 +64,13 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		        if (evt.getClickCount() == 2) {
 		            // Double-click detected
 		        	JTextArea msg = new JTextArea(modRequests.get(list.getSelectedValue()));
-		        	//La linea di codice seguente non funziona
-		        	msg.setBounds(msg.getX(), msg.getY(), 200, 100);
+		        	
+		        	UIManager.put("OptionPane.minimumSize", new Dimension(500,300));
 		        	msg.setLineWrap(true);
 		        	msg.setWrapStyleWord(true);
 		        	JScrollPane scrollPane = new JScrollPane(msg);
 		        	JOptionPane.showMessageDialog(card, scrollPane, "Pitch della richiesta", JOptionPane.INFORMATION_MESSAGE);
+		        	UIManager.put("OptionPane.minimumSize", new Dimension(550,50));
 		        }
 		    }
 		});
@@ -111,6 +115,9 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		JButton btnRespingi = new JButton("Respingi");
 		btnRespingi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(list.isSelectionEmpty()){
+					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima l'utente nella lista.");
+			}else{
 				try {
 					JDBCUserManager.manageRequest(list.getSelectedValue(), false);
 					model.remove(list.getSelectedIndex());
@@ -122,6 +129,7 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 					}else if(e1 instanceof SQLException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: problemi con il database.");
 						ScreenController.setPreviousScreen(screenName);
+						}
 					}
 				}
 			}

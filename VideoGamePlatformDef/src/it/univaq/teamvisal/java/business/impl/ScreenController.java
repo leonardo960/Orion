@@ -1,6 +1,7 @@
 package it.univaq.teamvisal.java.business.impl;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenFactory;
@@ -95,6 +97,7 @@ public class ScreenController {
 		window.setVisible(true);
 		window.setResizable(false);
 		window.setLocationRelativeTo(null);
+		
 	}
 	
 	public static void setScreen(String screen){
