@@ -46,6 +46,11 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 		card.add(welcomeLabel);
 		
 		JButton gamesButton = new JButton("Giochi");
+		gamesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ScreenController.setScreen("GAMESELECTIONSCREEN");
+			}
+		});
 		gamesButton.setBackground(Color.BLACK);
 		gamesButton.setForeground(Color.WHITE);
 		gamesButton.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
@@ -96,10 +101,10 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 						if(JOptionPane.showConfirmDialog(card, "Procedura di logout fallita a causa di problemi con il database.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
 							System.exit(0);
 						}
+					}
 				}
 			}
-		}
-	});
+		});
 		logoutButton.setBackground(Color.BLACK);
 		logoutButton.setFocusable(false);
 		logoutButton.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
