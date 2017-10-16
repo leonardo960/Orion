@@ -138,7 +138,7 @@ public class UserRegistrationView extends ScreenViewSuper implements ScreenView 
 		card.add(surnameLabel);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\workspace\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		background.setBackground(Color.BLACK);
 		card.add(background);

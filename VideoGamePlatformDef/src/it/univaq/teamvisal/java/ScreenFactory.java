@@ -1,9 +1,12 @@
 package it.univaq.teamvisal.java;
 
 import it.univaq.teamvisal.java.presentation.LoginScreenView;
+import it.univaq.teamvisal.java.presentation.ModeratorDerankView;
 import it.univaq.teamvisal.java.presentation.ModeratorFunctionsView;
 import it.univaq.teamvisal.java.presentation.ModeratorRegistrationView;
+import it.univaq.teamvisal.java.presentation.ModeratorRequestsView;
 import it.univaq.teamvisal.java.presentation.UserHomepageView;
+import it.univaq.teamvisal.java.presentation.UserManagementView;
 import it.univaq.teamvisal.java.presentation.UserProfileView;
 import it.univaq.teamvisal.java.presentation.UserRegistrationView;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
@@ -16,6 +19,10 @@ public class ScreenFactory {
 	private final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
 	private final static String USERPROFILESCREEN = "USERPROFILESCREEN";
 	private final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
+	private final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
+	private final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
+	private final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
+	
 	public static ScreenView produceScreen(String screenType){
 		switch(screenType){
 		case WELCOMESCREEN:
@@ -32,6 +39,12 @@ public class ScreenFactory {
 			return new UserProfileView();
 		case MODERATORFUNCTIONSSCREEN:
 			return new ModeratorFunctionsView();
+		case USERMANAGEMENTSCREEN:
+			return new UserManagementView();
+		case MODERATORREQUESTSSCREEN:
+			return new ModeratorRequestsView();
+		case MODERATORDERANKSCREEN:
+			return new ModeratorDerankView();
 		default:
 			return null;
 		}

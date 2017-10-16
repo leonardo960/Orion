@@ -103,7 +103,7 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 		card.add(lblPassword);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\workspace\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBackground(Color.BLACK);
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);

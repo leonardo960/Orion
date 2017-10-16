@@ -8,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeMap;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.User;
@@ -192,13 +195,12 @@ public class JDBCUserManager {
 	public static boolean sendModRequest(String pitch) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
 		
-		String query = "INSERT INTO mod_request VALUES (?, ?, ?)";
+		String query = "INSERT INTO mod_request VALUES (?, ?)";
 		
 		PreparedStatement ps = con.prepareStatement(query);
 		
 		ps.setString(1, currentUser.getUsername());
 		ps.setString(2, pitch);
-		ps.setString(3, "In esame");
 		
 		ps.executeUpdate();
 		
@@ -208,6 +210,77 @@ public class JDBCUserManager {
 		currentUser.setRequestSent(true);
 	
 		return true;
+	}
+	
+	public static TreeMap<String, String> getModeratorRequests() throws DatabaseConnectionException, SQLException{
+		TreeMap<String, String> modRequests = new TreeMap<String, String>();
+		Connection con = dbConnect();
+		Statement statement = con.createStatement();
+		String query = "SELECT * FROM mod_request";
+		
+		ResultSet rs = statement.executeQuery(query);
+		
+		while(rs.next()){
+			String user = rs.getString("mod_name");
+			String pitch = rs.getString("pitch");
+			modRequests.put(user, pitch);
+		}
+		
+		con.close();
+		statement.close();
+		
+		return modRequests;
+		
+	}
+	
+	public static void manageRequest(String username, boolean approved) throws DatabaseConnectionException, SQLException{
+		Connection con = dbConnect();
+		String sql = "delete from mod_request where mod_name = ?";
+		PreparedStatement statement = con.prepareStatement(sql);
+		statement.setString(1, username);
+		statement.executeUpdate();
+		
+		if(approved){
+			String sql2 = "update user set type = 'M' where username = ?";
+			PreparedStatement statement2 = con.prepareStatement(sql2);
+			statement2.setString(1, username);
+			statement2.executeUpdate();
+			statement2.close();
+		}
+		
+		con.close();
+		statement.close();
+	}
+	public static List<String> getModerators() throws DatabaseConnectionException, SQLException{
+		List<String> list = new LinkedList<String>();
+		
+		Connection con = dbConnect();
+		String sql = "select * from user where type = 'M'";
+		Statement statement = con.createStatement();
+		
+		ResultSet rs = statement.executeQuery(sql);
+		
+		while(rs.next()){
+			list.add(rs.getString("username") + " - " + rs.getString("nome") + " " + rs.getString("cognome"));
+		}
+		
+		rs.close();
+		statement.close();
+		con.close();
+		
+		
+		return list;
+	}
+	
+	public static void derankModerator(String username) throws DatabaseConnectionException, SQLException{
+		Connection con = dbConnect();
+		String sql = "update user set type = 'B' where username = ?";
+		PreparedStatement statement = con.prepareStatement(sql);
+		statement.setString(1, username);
+		statement.executeUpdate();
+		
+		statement.close();
+		con.close();
 	}
 	
 }

@@ -110,7 +110,7 @@ public class WelcomeScreenView extends ScreenViewSuper implements ScreenView {
 		
 		JLabel background = new JLabel("");
 		background.setBackground(Color.BLACK);
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\workspace\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		

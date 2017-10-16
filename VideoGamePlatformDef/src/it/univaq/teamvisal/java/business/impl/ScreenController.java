@@ -35,7 +35,13 @@ public class ScreenController {
 	private final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
 	private final static String USERPROFILESCREEN = "USERPROFILESCREEN";
 	private final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
+<<<<<<< HEAD
 	private final static String GAMESELECTIONSCREEN = "GAMESELECTIONSCREEN";
+=======
+	private final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
+	private final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
+	private final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
+>>>>>>> branch 'master' of https://github.com/leonardo960/Orion.git
 	
 	private LogoutController logoutController;
 	
@@ -128,8 +134,19 @@ public class ScreenController {
 		case MODERATORFUNCTIONSSCREEN:
 			screenManagerLayout.show(screenManager, USERHOMEPAGESCREEN);
 			break;
+<<<<<<< HEAD
 		case GAMESELECTIONSCREEN:
 			screenManagerLayout.show(screenManager, GAMESELECTIONSCREEN);
+=======
+		case USERMANAGEMENTSCREEN:
+			screenManagerLayout.show(screenManager, MODERATORFUNCTIONSSCREEN);
+		    break;
+		case MODERATORREQUESTSSCREEN:
+			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
+			break;
+		case MODERATORDERANKSCREEN:
+			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
+>>>>>>> branch 'master' of https://github.com/leonardo960/Orion.git
 		default:
 			break;
 		}
