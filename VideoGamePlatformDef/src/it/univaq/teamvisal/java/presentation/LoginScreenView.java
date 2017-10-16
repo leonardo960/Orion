@@ -144,6 +144,8 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 							JOptionPane.showMessageDialog(card, "Login fallito: lo username o la password sono errati.");
 						}
 					}
+				}else{
+					JOptionPane.showMessageDialog(card, "Per favore, inserisci sia username che password e assicurati che non ci siano spazi!");
 				}
 				
 			}
