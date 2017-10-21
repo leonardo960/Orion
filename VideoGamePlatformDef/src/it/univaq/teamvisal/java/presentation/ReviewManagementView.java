@@ -5,23 +5,36 @@ import javax.swing.JPanel;
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
+import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
+import it.univaq.teamvisal.java.business.impl.JDBCReviewManager;
 import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.model.Message;
+import it.univaq.teamvisal.java.business.model.Review;
 
 import javax.swing.JLabel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.TreeMap;
 import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ReviewManagementView extends ScreenViewSuper implements ScreenView {
 	
+	private JList<String> list;
+	private List<Review> reviews;
+	private TreeMap<Integer, Review> listRowToReview;
+	private DefaultListModel<String> model;
+	private JPanel card;
 	public ReviewManagementView(){
 		screenName = "REVIEWMANAGEMENTSCREEN";
 	}
@@ -30,7 +43,7 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 	 */
 	@Override
 	public JPanel initialize() {
-		JPanel card = new JPanel();
+		card = new JPanel();
 		card.setLayout(null);
 		
 		JLabel title = new JLabel("Recensioni in esame");
@@ -40,16 +53,41 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 		title.setBounds(0, 24, 283, 92);
 		card.add(title);
 		
-		JList list = new JList();
+		list = new JList<String>();
 		list.setBackground(Color.BLACK);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setOpaque(false);
 		list.setForeground(Color.WHITE);
-		list.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
+		list.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 10));
 		list.setBounds(43, 101, 306, 341);
+		
 		card.add(list);
 		
 		JButton btnApprova = new JButton("Approva");
+		/*btnApprova.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(list.isSelectionEmpty()){
+					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima la recensione nella lista.");
+			}else{
+				try {
+					Review review = new Review();
+					JDBCReviewManager.manageReview(review, true);
+					
+					JOptionPane.showMessageDialog(card, "Richiesta approvata con successo.");
+					JDBCMessageManager.postMessage(new Message("La recensione che avevi scritto per " + review.getGame().getGameTitle() + " è stata approvata!", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), ));
+					model.remove(list.getSelectedIndex());
+				} catch (DatabaseConnectionException | SQLException e1) {
+					if(e1 instanceof DatabaseConnectionException){
+						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: database offline.");
+						ScreenController.setPreviousScreen(screenName);
+					}else if(e1 instanceof SQLException){
+						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: problemi con il database.");
+						ScreenController.setPreviousScreen(screenName);
+						}
+					}
+				}
+			}
+		  });*/
 		btnApprova.setBackground(Color.BLACK);
 		btnApprova.setForeground(Color.WHITE);
 		btnApprova.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
@@ -64,6 +102,11 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 		card.add(btnRespingi);
 		
 		JButton back = new JButton("Indietro");
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ScreenController.setPreviousScreen(screenName);
+			}
+		});
 		back.setForeground(Color.WHITE);
 		back.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		back.setBackground(Color.BLACK);
@@ -84,21 +127,26 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 	}
 	
 	public void populateList(){
-		/*try {
-			modRequests = JDBCUserManager.getModeratorRequests();
+		try {
+			reviews = JDBCReviewManager.getPendingReviews();
+			listRowToReview = new TreeMap<Integer, Review>();
 			model = new DefaultListModel<String>();
-			for(String s : modRequests.keySet()){
-				model.addElement(s);
+			int i = 0;
+			for(Review r : reviews){
+				String row;
+				row = r.getUsername() + " - " + r.getGamename() + " - Voto: " + r.getVote() + " - " + "\"" + r.getText().substring(0, 20) + "...\"";
+				model.addElement(row);
+				listRowToReview.put(i++, r);
 			}
 			list.setModel(model);
 		} catch (DatabaseConnectionException | SQLException e) {
 			if(e instanceof DatabaseConnectionException){
-				JOptionPane.showMessageDialog(card, "Impossibile caricare le richieste moderatore: database offline.");
+				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensione in esame: database offline.");
 				ScreenController.setPreviousScreen(screenName);
 			}else if(e instanceof SQLException){
-				JOptionPane.showMessageDialog(card, "Impossibile caricare le richieste moderatore: problemi con il database.");
+				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensioni in esame: problemi con il database.");
 				ScreenController.setPreviousScreen(screenName);
 			}
-		}*/
+		}
 	}
 }

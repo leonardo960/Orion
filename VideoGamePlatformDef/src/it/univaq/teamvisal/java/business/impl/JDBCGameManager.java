@@ -14,12 +14,11 @@ import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.business.model.Review;
 
-public class JDBCGameManager {
+public class JDBCGameManager extends JDBCManager {
 
-	private static Game selectedGame;
-	private static String[] gamesList = {};
+	
 
-	public static Game doesGameExists(String selectedGameTitle) throws DatabaseConnectionException, SQLException {
+	public static Game doesGameExist(String selectedGameTitle) throws DatabaseConnectionException, SQLException {
 		
 		Connection con = dbConnect();
 		
@@ -46,8 +45,10 @@ public class JDBCGameManager {
 		return g;
 	}
 	
-	public static void retrieveReviews(String selectedGameTitle) throws SQLException, DatabaseConnectionException{
+	public static List<Review> retrieveReviews(String selectedGameTitle) throws SQLException, DatabaseConnectionException{
 
+		List<Review> reviews = new LinkedList<Review>();
+		
 		Connection con = dbConnect();
 		
 		Statement statement = con.createStatement();
@@ -56,29 +57,23 @@ public class JDBCGameManager {
 		
 		ResultSet rs = statement.executeQuery(reviewsQuery);
 		
-		List<Review> list = new LinkedList<Review>();
 		
 		while(rs.next()){
-				//costruisce una review temporanea con i dati del database
-		}		//e la aggiunge alla lista, che verrà poi passata al costruttore di Game
+			reviews.add( new Review(rs.getString("player"), rs.getString("game"), rs.getInt("vote"), rs.getString("text")));
+		}
 		
 		con.close();
 		statement.close();
 		rs.close();
 		
-		selectedGame.setGameReviews(list);
 		
+		return reviews;
 	}
 	
-	static public Game getSelectedGame(){
-		return selectedGame;
-	}
 	
-	static public void setSelectedGame(Game game){
-		selectedGame = game;
-	}
 	
-	static public void listGames() throws DatabaseConnectionException, SQLException{ 
+	static public List<Game> listGames() throws DatabaseConnectionException, SQLException{ 
+		List<Game> games = new LinkedList<Game>();
 		
 		Connection con = dbConnect();
 		
@@ -88,44 +83,15 @@ public class JDBCGameManager {
 		
 		ResultSet rs = statement.executeQuery(query);
 		
-		int rowcount = 0;
-		if (rs.last()) {
-		  rowcount = rs.getRow();
-		  rs.beforeFirst();
-		}
-		
-		String[] list = new String[rowcount];
-		
-		for(int row = 0; row == rowcount - 1; rs.next()){
-			list[row] = rs.getString("gamename");
+		while(rs.next()){
+			games.add(new Game(rs.getString("gamename"), rs.getString("description")));
 		}
 		
 		con.close();
 		statement.close();
 		rs.close();
 		
-		setGamesList(list);
-		
+		return games;
 	}
 	
-	static public void backFromSelection(){
-		selectedGame = null;
-	}
-	
-	static private Connection dbConnect() throws DatabaseConnectionException{
-		try {
-			Connection con = DriverManager.getConnection( "jdbc:mysql://localhost/oriondb?useSSL=true", "root", "lorenzo96" );
-			return con;
-		} catch (SQLException e) {
-			throw new DatabaseConnectionException();
-		}
-	}
-
-	public static String[] getGamesList() {
-		return gamesList;
-	}
-
-	public static void setGamesList(String[] gameList) {
-		JDBCGameManager.gamesList = gameList;
-	}
 }

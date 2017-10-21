@@ -7,8 +7,10 @@ import javax.swing.JTextArea;
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
+import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
 import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.model.Message;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -91,7 +93,9 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 			}else{
 				try {
 					JDBCUserManager.manageRequest(list.getSelectedValue(), true);
+					
 					JOptionPane.showMessageDialog(card, "Richiesta approvata con successo.");
+					JDBCMessageManager.postMessage(new Message("Complimenti, la tua richiesta per diventare Moderatore è stata approvata! Da oggi in poi avrai accesso al Pannello Moderatore, dove potrai gestire l'utenza e moderare le recensioni. Benvenuto a bordo, e buon lavoro!", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), list.getSelectedValue()));
 					model.remove(list.getSelectedIndex());
 				} catch (DatabaseConnectionException | SQLException e1) {
 					if(e1 instanceof DatabaseConnectionException){

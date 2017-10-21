@@ -37,13 +37,15 @@ public class ScreenController {
 	private final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
 	private final static String USERPROFILESCREEN = "USERPROFILESCREEN";
 	private final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
-<<<<<<< HEAD
 	private final static String GAMESELECTIONSCREEN = "GAMESELECTIONSCREEN";
-=======
 	private final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
 	private final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
 	private final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
 
+
+	private final static String REVIEWMANAGEMENTSCREEN = "REVIEWMANAGEMENTSCREEN";
+	private final static String GAMEPROFILESCREEN = "GAMEPROFILESCREEN";
+	private final static String GAMEREVIEWSCREEN = "GAMEREVIEWSCREEN";
 	
 	private LogoutController logoutController;
 	
@@ -139,6 +141,9 @@ public class ScreenController {
 			break;
 		case GAMESELECTIONSCREEN:
 			screenManagerLayout.show(screenManager, GAMESELECTIONSCREEN);
+
+			screenManagerLayout.show(screenManager, USERHOMEPAGESCREEN);
+			break;
 		case USERMANAGEMENTSCREEN:
 			screenManagerLayout.show(screenManager, MODERATORFUNCTIONSSCREEN);
 		    break;
@@ -147,6 +152,17 @@ public class ScreenController {
 			break;
 		case MODERATORDERANKSCREEN:
 			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
+
+			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
+			break;
+		case REVIEWMANAGEMENTSCREEN:
+			screenManagerLayout.show(screenManager, MODERATORFUNCTIONSSCREEN);
+			break;
+		case GAMEPROFILESCREEN:
+			screenManagerLayout.show(screenManager, GAMESELECTIONSCREEN);
+			break;
+		case GAMEREVIEWSCREEN:
+			screenManagerLayout.show(screenManager, GAMEPROFILESCREEN);
 		default:
 			break;
 		}

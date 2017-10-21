@@ -1,5 +1,6 @@
 package it.univaq.teamvisal.java.presentation;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -9,20 +10,30 @@ import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.JDBCGameManager;
+import it.univaq.teamvisal.java.business.impl.JDBCReviewManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.model.Game;
+import it.univaq.teamvisal.java.business.model.Review;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 
 public class GameSelectionView extends ScreenViewSuper implements ScreenView{
@@ -30,10 +41,12 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 	private JLabel titleLabel;
 	private JButton selectButton;
 	private JButton backButton;
-	private JButton updateButton;
-	private String selectedGame;
-	private JList<Object> gameList;
-	
+	private JList<String> list;
+	private DefaultListModel<String> model;
+	private JScrollPane scrollPane;
+	private List<Game> games;
+	private TreeMap<String, Game> listRowToGame;
+	private JPanel card;
 	
 	public GameSelectionView(){
 		screenName = "GAMESELECTIONSCREEN";
@@ -47,7 +60,7 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 	@Override
 	public JPanel initialize(){
 		
-		JPanel card = new JPanel();
+		card = new JPanel();
 		card.setBounds(0, 0, 500, 500);
 		card.setLayout(null);
 		
@@ -58,41 +71,16 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		titleLabel.setLocation(124, 23);
 		titleLabel.setSize(252, 46);
 		card.add(titleLabel);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportBorder(null);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(124, 97, 252, 205);
-		card.add(scrollPane);
-		
-		try{
-			
-			JDBCGameManager.listGames();
-			gameList = new JList<Object>(JDBCGameManager.getGamesList());
-			
-		} catch (DatabaseConnectionException | SQLException e) {
-			gameList = new JList<Object>();
-			if(e instanceof DatabaseConnectionException){
-				JOptionPane.showMessageDialog(card, "I giochi non sono stati caricati perché il database risulta offline");
-			}else if(e instanceof SQLException){
-				JOptionPane.showMessageDialog(card, "I giochi non sono stati caricati a causa di un problema con il database.\nRitentare premendo il pulsante Aggiorna");
-			}
-		}
-		
-		gameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		gameList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				selectedGame = (String) gameList.getSelectedValue();
-			}
-		});
-		
-		gameList.setForeground(new Color(255, 255, 102));
-		scrollPane.setViewportView(gameList);
-		gameList.setBackground(new Color(0, 0, 51));
-		gameList.setBorder(null);
+	
 		
 		selectButton = new JButton("Vai al gioco");
+		selectButton.setFocusable(false);
+		selectButton.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
+		selectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				goToGameProfile();
+			}
+		});
 		selectButton.setBackground(Color.BLACK);
 		selectButton.setForeground(Color.WHITE);
 		selectButton.setLocation(155, 350);
@@ -100,6 +88,8 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		card.add(selectButton);
 		
 		backButton = new JButton("Indietro");
+		backButton.setFocusable(false);
+		backButton.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ScreenController.setPreviousScreen("GAMESELECTIONSCREEN");
@@ -111,24 +101,66 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		backButton.setSize(190, 35);
 		card.add(backButton);
 		
-		updateButton = new JButton("Aggiorna");
-		updateButton.setBackground(new Color(0, 0, 0));
-		updateButton.setForeground(new Color(51, 153, 255));
-		updateButton.setBounds(124, 301, 252, 23);
-		card.add(updateButton);
+		scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(86, 68, 335, 268);
+		card.add(scrollPane);
+		
+		list = new JList<String>();
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setFocusable(false);
+		list.setBackground(Color.BLACK);
+		list.setForeground(Color.WHITE);
+		list.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
+		list.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		        JList<String> list = (JList<String>) evt.getSource();
+		        if (evt.getClickCount() == 2) {
+		            // Double-click detected
+		        	goToGameProfile();
+		        }
+		    }
+		});
+		scrollPane.setViewportView(list);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\workspace\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		
-		return null;
+		return card;
 	}
 
 	@Override
 	protected void clearTextFields() {
 		// NEVER USED
-		
 	}
-
+	
+	public void populateList(){
+		try {
+			games = JDBCGameManager.listGames();
+			model = new DefaultListModel<String>();
+			listRowToGame = new TreeMap<String, Game>();
+			for(Game g : games){
+				String row;
+				row = g.getGameTitle();
+				model.addElement(row);
+				listRowToGame.put(g.getGameTitle(), g);
+			}
+			list.setModel(model);
+		} catch (DatabaseConnectionException | SQLException e) {
+			if(e instanceof DatabaseConnectionException){
+				JOptionPane.showMessageDialog(card, "Impossibile caricare i giochi: database offline.");
+				ScreenController.setPreviousScreen(screenName);
+			}else if(e instanceof SQLException){
+				JOptionPane.showMessageDialog(card, "Impossibile caricare i giochi: problemi con il database.");
+				ScreenController.setPreviousScreen(screenName);
+			}
+		}
+	}
+	
+	private void goToGameProfile(){
+		ScreenController.setScreen("GAMEPROFILESCREEN");
+		((GameProfileView) ScreenController.getLoadedScreens().get("GAMEPROFILESCREEN")).populateFields(listRowToGame.get(list.getSelectedValue()));
+	}
 }

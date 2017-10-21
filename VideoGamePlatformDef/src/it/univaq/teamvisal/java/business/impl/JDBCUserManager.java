@@ -15,7 +15,7 @@ import java.util.TreeMap;
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.User;
 
-public class JDBCUserManager {
+public class JDBCUserManager extends JDBCManager {
 	//Bisognerà vedere quand'è che effettivamente si connette al DB
 	//E quando invece opera solo in RAM; comunque fa entrambe le cose JDBCUserManager
 	
@@ -101,8 +101,6 @@ public class JDBCUserManager {
 		}
 		
 		
-		
-		
 		String query4 = "SELECT * FROM mod_request WHERE mod_name = ?";
 		PreparedStatement s4 = con.prepareStatement(query4);
 		s4.setString(1, username);
@@ -162,14 +160,7 @@ public class JDBCUserManager {
 
 	
 
-	static private Connection dbConnect() throws DatabaseConnectionException{
-		try {
-			Connection con = DriverManager.getConnection( "jdbc:mysql://localhost/oriondb?useSSL=true", "root", "lorenzo96" );
-			return con;
-		} catch (SQLException e) {
-			throw new DatabaseConnectionException();
-		}
-	}
+	
 	
 	static public boolean isUserLogged(){
 		return currentUser != null;
