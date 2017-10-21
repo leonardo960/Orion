@@ -157,6 +157,7 @@ public class ScreenController {
 			break;
 		case GAMEREVIEWSCREEN:
 			screenManagerLayout.show(screenManager, GAMEPROFILESCREEN);
+			break;
 		default:
 			break;
 		}
