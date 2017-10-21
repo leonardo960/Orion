@@ -129,7 +129,7 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 							((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setRequestButton(false);
 							((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setModeratorFunctionsButton(true);
 						}
-						
+						((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 						
 					} catch (DatabaseConnectionException | SQLException | NoUserException e) {
 						if(e instanceof DatabaseConnectionException){

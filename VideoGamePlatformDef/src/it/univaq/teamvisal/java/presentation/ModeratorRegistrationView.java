@@ -125,7 +125,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					moderatorRequestController.sendRequest(txtrRaccontaciCosaTi.getText());
-					JOptionPane.showMessageDialog(card, "Richiesta inviata con successo! Grazie del tuo interesse.\nSe verrà approvata, comparirà direttamente il pannello delle funzioni moderatore.\nAltrimenti, sarà possibile riformulare una nuova richiesta.");
+					JOptionPane.showMessageDialog(card, "Richiesta inviata con successo! Grazie del tuo interesse. Ti verrà inviato un messaggio dal sistema con l'esito della richiesta.");
 					((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setRequestButton(false);
 					ScreenController.setPreviousScreen(screenName);
 				} catch (DatabaseConnectionException | SQLException e) {

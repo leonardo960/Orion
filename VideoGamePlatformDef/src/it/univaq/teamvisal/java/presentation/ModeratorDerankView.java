@@ -5,8 +5,10 @@ import javax.swing.JPanel;
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
+import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
 import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.model.Message;
 
 import javax.swing.JLabel;
 import javax.swing.DefaultListModel;
@@ -78,6 +80,7 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 					try {
 						JDBCUserManager.derankModerator(list.getSelectedValue().substring(0, list.getSelectedValue().indexOf(" ")));
 						JOptionPane.showMessageDialog(card, "L'utente selezionato è stato degradato correttamente.");
+						JDBCMessageManager.postMessage(new Message("Siamo spiacenti di comunicarti che ti è stato revocato lo status di Moderatore. Potrai fare richiesta per essere riammesso, se lo desideri.", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), list.getSelectedValue().substring(0, list.getSelectedValue().indexOf(" "))));
 						model.remove(list.getSelectedIndex());
 					} catch (DatabaseConnectionException | SQLException e1) {
 						if(e1 instanceof DatabaseConnectionException){

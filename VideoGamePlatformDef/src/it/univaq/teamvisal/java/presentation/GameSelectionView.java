@@ -122,7 +122,7 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		
-		return null;
+		return card;
 	}
 
 	@Override

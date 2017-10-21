@@ -20,8 +20,10 @@ import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.UserAlreadyExistsException;
+import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
 import it.univaq.teamvisal.java.business.impl.RegistrationController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.model.Message;
 
 import java.awt.Color;
 import javax.swing.SwingConstants;
@@ -156,6 +158,7 @@ public class UserRegistrationView extends ScreenViewSuper implements ScreenView 
 					try {
 						if(registrationController.register(username.getText(), String.copyValueOf(password.getPassword()), name.getText(), surname.getText())){
 							JOptionPane.showMessageDialog(card, "Registrazione avvenuta con successo!");
+							JDBCMessageManager.postMessage(new Message("Benvenuto su Orion! Messaggi come questo verrano usati per comunicarti ogni sorta di notifica. Buon Divertimento!", "Sistema", username.getText()));
 							clearTextFields();
 							ScreenController.setPreviousScreen(screenName);
 					}} catch (HeadlessException | SQLException | UserAlreadyExistsException | DatabaseConnectionException e) {

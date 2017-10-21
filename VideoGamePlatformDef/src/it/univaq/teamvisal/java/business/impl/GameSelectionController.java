@@ -6,7 +6,7 @@ public class GameSelectionController {
 	
 	public void gameSelected(String title){
 		
-		Game selectedGame = JDBCGameManager.doesGameExists(title);
+		//Game selectedGame = JDBCGameManager.doesGameExists(title);
 		
 	}
 
