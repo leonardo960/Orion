@@ -13,7 +13,7 @@ import java.util.List;
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Message;
 
-public class JDBCMessageManager {
+public class JDBCMessageManager extends JDBCManager {
 
 	
 	public static void postMessage(Message message) throws DatabaseConnectionException, SQLException{
@@ -61,12 +61,5 @@ public class JDBCMessageManager {
 		con.close();
 	}
 	
-	static private Connection dbConnect() throws DatabaseConnectionException{
-		try {
-			Connection con = DriverManager.getConnection( "jdbc:mysql://localhost/oriondb?useSSL=true", "root", "lorenzo96" );
-			return con;
-		} catch (SQLException e) {
-			throw new DatabaseConnectionException();
-		}
-	}
+	
 }

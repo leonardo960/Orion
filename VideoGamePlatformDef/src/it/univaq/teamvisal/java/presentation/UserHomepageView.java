@@ -62,6 +62,7 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 		gamesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ScreenController.setScreen("GAMESELECTIONSCREEN");
+				((GameSelectionView) ScreenController.getLoadedScreens().get("GAMESELECTIONSCREEN")).populateList();
 			}
 		});
 		gamesButton.setBackground(Color.BLACK);

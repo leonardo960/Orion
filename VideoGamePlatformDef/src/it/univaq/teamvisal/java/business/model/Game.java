@@ -6,7 +6,7 @@ public class Game{
 	
 	private String gameTitle;
 	private String description;
-	private List<Review> gameReviews;
+	
 	
 	public Game(String title, String descr) {
 		setGameTitle(title);
@@ -29,12 +29,6 @@ public class Game{
 		this.description = description;
 	}
 
-	public List<Review> getGameReviews() {
-		return gameReviews;
-	}
-
-	public void setGameReviews(List<Review> gameReviews) {
-		this.gameReviews = gameReviews;
-	}
+	
 
 }
