@@ -53,8 +53,7 @@ public class ScreenController {
 		loadedScreens = new TreeMap<String, ScreenView>();
 		
 		window = new JFrame("Orion");
-		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE
-				);
+		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		window.setSize(500, 500);
 		window.addWindowListener(new WindowAdapter() {
 			  public void windowClosing(WindowEvent e) {
