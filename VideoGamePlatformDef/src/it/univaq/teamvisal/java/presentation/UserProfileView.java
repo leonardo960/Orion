@@ -6,21 +6,13 @@ import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
-import it.univaq.teamvisal.java.business.model.User;
+import it.univaq.teamvisal.java.business.model.Trophy;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JPasswordField;
 import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
-import javax.swing.JProgressBar;
-import javax.swing.JSlider;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.border.LineBorder;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -37,7 +29,6 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 	 */
 	@Override
 	public JPanel initialize() {
-		JPanel card = new JPanel();
 		card.setLayout(null);
 		
 		username = new JLabel("Username: " + JDBCUserManager.getCurrentUser().getUsername());
@@ -67,13 +58,14 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 		level = new JLabel("Livello: " + JDBCUserManager.getCurrentUser().getLevel());
 		level.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		level.setForeground(Color.WHITE);
-		level.setBounds(78, 192, 246, 14);
+		level.setBounds(78, 192, 246, 18);
 		card.add(level);
 		
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ScreenController.setPreviousScreen(screenName);
+				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});
 		back.setFocusable(false);
@@ -82,7 +74,7 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 		back.setBounds(10, 419, 124, 36);
 		card.add(back);
 		
-		JLabel trofeo1 = new JLabel("Trofeo di Benvenuto - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(0));
+		JLabel trofeo1 = new JLabel("Trofeo di Benvenuto - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo di Benvenuto")));
 		trofeo1.setBackground(Color.BLACK);
 		trofeo1.setForeground(Color.WHITE);
 		trofeo1.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
@@ -144,7 +136,7 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 	}
 	
 	public void setTrophyDates(){
-		switch(JDBCUserManager.getCurrentUser().getLvlDates().size()){
+		switch(JDBCUserManager.getCurrentUser().getTrophies().size()){
 		case 1:
 			trofeo2.setText("Trofeo Lira - Non acquisito");
 			trofeo3.setText("Trofeo Bilancia - Non acquisito");
@@ -152,28 +144,28 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 2:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(1));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
 			trofeo3.setText("Trofeo Bilancia - Non acquisito");
 			trofeo4.setText("Trofeo Paradiso - Non acquisito");
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 3:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(1));
-			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(2));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
+			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
 			trofeo4.setText("Trofeo Paradiso - Non acquisito");
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 4:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(1));
-			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(2));
-			trofeo4.setText("Trofeo Paradiso - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(3));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
+			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
+			trofeo4.setText("Trofeo Paradiso - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Paradiso")));
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 5:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(1));
-			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(2));
-			trofeo4.setText("Trofeo Paradiso - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(3));
-			trofeo5.setText("Trofeo Orion - Acquisito il " + JDBCUserManager.getCurrentUser().getLvlDates().get(4));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
+			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
+			trofeo4.setText("Trofeo Paradiso - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Paradiso")));
+			trofeo5.setText("Trofeo Orion - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Orion")));
 			break;
 		default:
 			break;
@@ -188,8 +180,5 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 		level.setText("Livello: " + JDBCUserManager.getCurrentUser().getLevel());
 	}
 	
-	@Override
-	protected void clearTextFields() {
-		//THIS FUNCTION WILL NEVER BE CALLED HERE
-	}
+
 }

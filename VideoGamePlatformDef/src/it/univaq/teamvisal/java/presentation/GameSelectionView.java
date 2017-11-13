@@ -10,24 +10,17 @@ import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.JDBCGameManager;
-import it.univaq.teamvisal.java.business.impl.JDBCReviewManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
 import it.univaq.teamvisal.java.business.model.Game;
-import it.univaq.teamvisal.java.business.model.Review;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -46,7 +39,6 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 	private JScrollPane scrollPane;
 	private List<Game> games;
 	private TreeMap<String, Game> listRowToGame;
-	private JPanel card;
 	
 	public GameSelectionView(){
 		screenName = "GAMESELECTIONSCREEN";
@@ -59,8 +51,6 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 	 */
 	@Override
 	public JPanel initialize(){
-		
-		card = new JPanel();
 		card.setBounds(0, 0, 500, 500);
 		card.setLayout(null);
 		
@@ -78,7 +68,12 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		selectButton.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		selectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				goToGameProfile();
+				if(list.isSelectionEmpty()){
+					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima il gioco dalla lista.", "Gioco non selezionato.", JOptionPane.WARNING_MESSAGE);
+				}else{
+					goToGameProfile();
+				}
+				
 			}
 		});
 		selectButton.setBackground(Color.BLACK);
@@ -93,6 +88,7 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ScreenController.setPreviousScreen("GAMESELECTIONSCREEN");
+				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});
 		backButton.setForeground(Color.WHITE);
@@ -114,7 +110,6 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		list.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		list.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
-		        JList<String> list = (JList<String>) evt.getSource();
 		        if (evt.getClickCount() == 2) {
 		            // Double-click detected
 		        	goToGameProfile();
@@ -131,10 +126,7 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		return card;
 	}
 
-	@Override
-	protected void clearTextFields() {
-		// NEVER USED
-	}
+
 	
 	public void populateList(){
 		try {

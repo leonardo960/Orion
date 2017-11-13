@@ -1,6 +1,5 @@
 package it.univaq.teamvisal.java.presentation;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -8,8 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +29,6 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
 import javax.swing.JPasswordField;
 
 public class UserRegistrationView extends ScreenViewSuper implements ScreenView {
@@ -50,7 +47,6 @@ public class UserRegistrationView extends ScreenViewSuper implements ScreenView 
 	 * @wbp.parser.entryPoint
 	 */
 	public JPanel initialize() {
-		JPanel card = new JPanel();
 		JButton confirm = new JButton("Registrati");
 		confirm.setForeground(Color.WHITE);
 		

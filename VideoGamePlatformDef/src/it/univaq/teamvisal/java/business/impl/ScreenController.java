@@ -2,103 +2,46 @@
 package it.univaq.teamvisal.java.business.impl;
 
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.TreeMap;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenFactory;
 import it.univaq.teamvisal.java.ScreenView;
-import it.univaq.teamvisal.java.presentation.LoginScreenView;
-import it.univaq.teamvisal.java.presentation.ModeratorRegistrationView;
-import it.univaq.teamvisal.java.presentation.UserRegistrationView;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
 
 public class ScreenController {
 
 	private static ScreenView currentScreen;
 	private static JPanel screenManager;
-	private JFrame window;
+	private static JFrame window;
 	private static TreeMap<String, ScreenView> loadedScreens;
 	private static CardLayout screenManagerLayout;
 	
-	private final static String WELCOMESCREEN = "WELCOMESCREEN";
-	private final static String LOGINSCREEN = "LOGINSCREEN";
-	private final static String USERREGISTRATIONSCREEN = "USERREGISTRATIONSCREEN";
-	private final static String MODERATORREGISTRATIONSCREEN = "MODERATORREGISTRATIONSCREEN";
-	private final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
-	private final static String USERPROFILESCREEN = "USERPROFILESCREEN";
-	private final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
-	private final static String GAMESELECTIONSCREEN = "GAMESELECTIONSCREEN";
-	private final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
-	private final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
-	private final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
-	private final static String REVIEWMANAGEMENTSCREEN = "REVIEWMANAGEMENTSCREEN";
-	private final static String GAMEPROFILESCREEN = "GAMEPROFILESCREEN";
-	private final static String GAMEREVIEWSCREEN = "GAMEREVIEWSCREEN";
+	public final static String WELCOMESCREEN = "WELCOMESCREEN";
+	public final static String LOGINSCREEN = "LOGINSCREEN";
+	public final static String USERREGISTRATIONSCREEN = "USERREGISTRATIONSCREEN";
+	public final static String MODERATORREGISTRATIONSCREEN = "MODERATORREGISTRATIONSCREEN";
+	public final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
+	public final static String USERPROFILESCREEN = "USERPROFILESCREEN";
+	public final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
+	public final static String GAMESELECTIONSCREEN = "GAMESELECTIONSCREEN";
+	public final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
+	public final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
+	public final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
+	public final static String REVIEWMANAGEMENTSCREEN = "REVIEWMANAGEMENTSCREEN";
+	public final static String GAMEPROFILESCREEN = "GAMEPROFILESCREEN";
+	public final static String GAMEREVIEWSCREEN = "GAMEREVIEWSCREEN";
+	public final static String WRITEREVIEWSCREEN = "WRITEREVIEWSCREEN";
 	
-	private LogoutController logoutController;
-	
-	
-	public ScreenController(){
-		logoutController = new LogoutController();
-		loadedScreens = new TreeMap<String, ScreenView>();
-		
-		window = new JFrame("Orion");
-		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		window.setSize(500, 500);
-		window.addWindowListener(new WindowAdapter() {
-			  public void windowClosing(WindowEvent e) {
-			if(JDBCUserManager.isUserLogged()){
-			    if(JOptionPane.showConfirmDialog(window, "Sei sicuro di voler uscire? (questo effettuerà il logout)", "Conferma uscita", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-				try {
-					logoutController.logout();
-					System.exit(0);
-				} catch (DatabaseConnectionException | SQLException e1) {
-					if(e1 instanceof DatabaseConnectionException){
-						if(JOptionPane.showConfirmDialog(window, "Procedura di logout fallita: database offline.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
-							System.exit(0);
-						}
-					}else if(e1 instanceof SQLException){
-						if(JOptionPane.showConfirmDialog(window, "Procedura di logout fallita a causa di problemi con il database.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
-							System.exit(0);
-						}
-					}
-				}
-				
-			    }else{
-			    	//DO NOTHING
-			    } 
-			  }else{
-				  System.exit(0);
-			  }
-			 }
-			});
-		screenManager = new JPanel();
-		screenManager.setLayout(new CardLayout());
-		
-		window.add(screenManager);
-		
-		currentScreen = new WelcomeScreenView();
-		screenManager.add(currentScreen.initialize(), WELCOMESCREEN);
-		loadedScreens.put(WELCOMESCREEN, currentScreen);
-		screenManagerLayout = (CardLayout)(screenManager.getLayout());
-		screenManagerLayout.show(screenManager, WELCOMESCREEN);
-		
-		window.setVisible(true);
-		window.setResizable(false);
-		window.setLocationRelativeTo(null);
-		
-	}
+	private static LogoutController logoutController;
+
 	
 	public static void setScreen(String screen){
 		if(!loadedScreens.containsValue(currentScreen)){
@@ -158,6 +101,9 @@ public class ScreenController {
 		case GAMEREVIEWSCREEN:
 			screenManagerLayout.show(screenManager, GAMEPROFILESCREEN);
 			break;
+		case WRITEREVIEWSCREEN:
+			screenManagerLayout.show(screenManager, GAMEREVIEWSCREEN);
+			break;
 		default:
 			break;
 		}
@@ -167,5 +113,54 @@ public class ScreenController {
 		return loadedScreens;
 	}
 	
+	public static void begin(){
+		logoutController = new LogoutController();
+		loadedScreens = new TreeMap<String, ScreenView>();
+		
+		window = new JFrame("Orion");
+		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		window.setSize(500, 500);
+		window.addWindowListener(new WindowAdapter() {
+			  public void windowClosing(WindowEvent e) {
+			if(JDBCUserManager.isUserLogged()){
+			    if(JOptionPane.showConfirmDialog(window, "Sei sicuro di voler uscire? (questo effettuerà il logout)", "Conferma uscita", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				try {
+					logoutController.logout();
+					System.exit(0);
+				} catch (DatabaseConnectionException | SQLException e1) {
+					if(e1 instanceof DatabaseConnectionException){
+						if(JOptionPane.showConfirmDialog(window, "Procedura di logout fallita: database offline.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
+							System.exit(0);
+						}
+					}else if(e1 instanceof SQLException){
+						if(JOptionPane.showConfirmDialog(window, "Procedura di logout fallita a causa di problemi con il database.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
+							System.exit(0);
+						}
+					}
+				}
+				
+			    }else{
+			    	//DO NOTHING
+			    } 
+			  }else{
+				  System.exit(0);
+			  }
+			 }
+			});
+		screenManager = new JPanel();
+		screenManager.setLayout(new CardLayout());
+		
+		window.add(screenManager);
+		
+		currentScreen = new WelcomeScreenView();
+		screenManager.add(currentScreen.initialize(), WELCOMESCREEN);
+		loadedScreens.put(WELCOMESCREEN, currentScreen);
+		screenManagerLayout = (CardLayout)(screenManager.getLayout());
+		screenManagerLayout.show(screenManager, WELCOMESCREEN);
+		
+		window.setVisible(true);
+		window.setResizable(false);
+		window.setLocationRelativeTo(null);
+	}
 	
 }

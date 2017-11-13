@@ -5,13 +5,12 @@ import javax.swing.JPanel;
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
-import it.univaq.teamvisal.java.business.impl.JDBCGameManager;
+import it.univaq.teamvisal.java.business.impl.GameplayController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
 import it.univaq.teamvisal.java.business.model.Game;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.SwingConstants;
@@ -20,17 +19,17 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 
 public class GameProfileView extends ScreenViewSuper implements ScreenView {
-	private JPanel card;
 	private JLabel gameTitle;
 	private JButton reviewsBtn;
 	private JLabel gameDescription;
 	private Game displayedGame;
+	private GameplayController gameplayController;
 	
 	public GameProfileView(){
+		gameplayController = new GameplayController();
 		screenName = "GAMEPROFILESCREEN";
 	}
 	
@@ -39,7 +38,6 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 	 */
 	@Override
 	public JPanel initialize() {
-		card = new JPanel();
 		card.setLayout(null);
 		
 		gameDescription = new JLabel("");
@@ -60,7 +58,19 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 		JButton play = new JButton("Gioca!");
 		play.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				playGame();
+				try {
+					gameplayController.playGame(displayedGame);
+				} catch(IOException | InterruptedException | DatabaseConnectionException | SQLException e1){
+					if(e1 instanceof IOException){
+						JOptionPane.showMessageDialog(card, "Errore di I/O nell'aprire il gioco", "Errore", JOptionPane.ERROR_MESSAGE);
+					}else if(e1 instanceof InterruptedException){
+						JOptionPane.showMessageDialog(card, "L'applicazione è ripartita senza aspettare il gioco", "Errore", JOptionPane.ERROR_MESSAGE);
+					}else if(e1 instanceof DatabaseConnectionException){
+						JOptionPane.showMessageDialog(card, "Errore nella sincronizzazione con il database: database offline.", "Errore", JOptionPane.ERROR_MESSAGE);
+					}else if(e1 instanceof SQLException){
+						JOptionPane.showMessageDialog(card, "Errore nella sincronizzazione con il database: problemi con il database.", "Errore", JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 		});
 		play.setBackground(Color.BLACK);
@@ -75,6 +85,8 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 			public void actionPerformed(ActionEvent e) {
 				ScreenController.setScreen("GAMEREVIEWSCREEN");
 				((GameReviewView) ScreenController.getLoadedScreens().get("GAMEREVIEWSCREEN")).populateList(displayedGame);
+				((GameReviewView) ScreenController.getLoadedScreens().get("GAMEREVIEWSCREEN")).checkSendButtonVisibility();
+				
 			}
 		});
 		reviewsBtn.setBackground(Color.BLACK);
@@ -105,10 +117,6 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 		return card;
 	}
 
-	@Override
-	protected void clearTextFields() {
-		//NEVER USED
-	}
 	
 	public void populateFields(Game game){
 		gameTitle.setText(game.getGameTitle());
@@ -116,21 +124,7 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 		displayedGame = game;
 	}
 	
-	private void playGame(){
-		ProcessBuilder pb = new ProcessBuilder("java", "-jar", "\"C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\games\\" + displayedGame.getGameTitle() + ".jar\"");
-		try{ 
-			Process p;
-			p = pb.start();
-			p.waitFor();
-			System.out.println("Il gioco ha finito di eseguire.");
-		}catch(IOException | InterruptedException e){
-			if(e instanceof IOException){
-				JOptionPane.showMessageDialog(card, "Errore di I/O nell'aprire il gioco", "Errore", JOptionPane.ERROR_MESSAGE);
-			}else if(e instanceof InterruptedException){
-				JOptionPane.showMessageDialog(card, "L'applicazione è ripartita senza aspettare il gioco", "Errore", JOptionPane.ERROR_MESSAGE);
-			}
-		}
+	
 		
-		
-	}
+	
 }

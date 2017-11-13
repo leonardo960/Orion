@@ -1,39 +1,31 @@
 package it.univaq.teamvisal.java.presentation;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.DocumentSizeFilter;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ModeratorRequestController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.Font;
-import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import javax.swing.JTextArea;
-import java.awt.event.InputMethodListener;
 import java.sql.SQLException;
-import java.awt.event.InputMethodEvent;
-import javax.swing.JPasswordField;
+
 
 public class ModeratorRegistrationView extends ScreenViewSuper implements ScreenView {
 	private JTextArea txtrRaccontaciCosaTi;
@@ -48,7 +40,6 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 	 * @wbp.parser.entryPoint
 	 */
 	public JPanel initialize() {
-		JPanel card = new JPanel();
 		JButton confirm = new JButton("Invia richiesta");
 		confirm.setForeground(Color.WHITE);
 		confirm.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
@@ -69,6 +60,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				ScreenController.setPreviousScreen(screenName);
+				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});
 		
@@ -84,7 +76,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 		
 		
 		
-		JLabel wordCount = new JLabel("55/550");
+		JLabel wordCount = new JLabel("55/400");
 		wordCount.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		wordCount.setForeground(Color.WHITE);
 		wordCount.setBounds(396, 264, 65, 30);
@@ -128,6 +120,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 					JOptionPane.showMessageDialog(card, "Richiesta inviata con successo! Grazie del tuo interesse. Ti verrà inviato un messaggio dal sistema con l'esito della richiesta.");
 					((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setRequestButton(false);
 					ScreenController.setPreviousScreen(screenName);
+					((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 				} catch (DatabaseConnectionException | SQLException e) {
 					if(e instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Invio richiesta fallito: database offline.");
@@ -141,7 +134,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 		return card;
 	}
 
-	@Override
+	
 	public void clearTextFields() {
 		txtrRaccontaciCosaTi.setText("Raccontaci cosa ti ha portato a voler lavorare con noi!");
 	}

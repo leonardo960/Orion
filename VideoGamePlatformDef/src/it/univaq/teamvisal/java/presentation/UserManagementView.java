@@ -24,7 +24,6 @@ public class UserManagementView extends ScreenViewSuper implements ScreenView {
 	 */
 	@Override
 	public JPanel initialize() {
-		JPanel card = new JPanel();
 		card.setLayout(null);
 		
 		JButton demote = new JButton("Degrada Moderatori");
@@ -76,9 +75,5 @@ public class UserManagementView extends ScreenViewSuper implements ScreenView {
 		return card;
 	}
 
-	@Override
-	protected void clearTextFields() {
-		// TODO Auto-generated method stub
-		
-	}
+
 }

@@ -5,15 +5,14 @@ package it.univaq.teamvisal.java.business.model;
 import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import it.univaq.teamvisal.java.Actor;
+import java.util.TreeMap;
 
 public class User extends Actor {
 	private String nome, cognome;
 	private String residenza;
     private int exp;
 	private String level;
-	private List<Date> lvlDates;
+	private TreeMap<Trophy, Date> trophies;
 	private boolean isMod;
 	private String type;
 	private boolean requestSent;
@@ -29,7 +28,7 @@ public class User extends Actor {
 		this.cognome = cognome;
 		exp = 0;
 		level = "Recluta";
-		lvlDates = new LinkedList<Date>();
+		trophies = new TreeMap<Trophy, Date>();
 		type = "B";
 		requestSent = false;
 	}
@@ -83,8 +82,8 @@ public class User extends Actor {
 		this.level = level;
 	}
 
-	public List<Date> getLvlDates(){
-		return lvlDates;
+	public TreeMap<Trophy, Date> getTrophies(){
+		return trophies;
 	}
 	
 	public void setType(String type){

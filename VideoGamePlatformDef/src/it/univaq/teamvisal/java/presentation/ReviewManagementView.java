@@ -1,6 +1,8 @@
 package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.ScreenView;
@@ -20,21 +22,24 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.TreeMap;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 
 public class ReviewManagementView extends ScreenViewSuper implements ScreenView {
 	
 	private JList<String> list;
 	private List<Review> reviews;
-	private TreeMap<Integer, Review> listRowToReview;
 	private DefaultListModel<String> model;
-	private JPanel card;
 	public ReviewManagementView(){
 		screenName = "REVIEWMANAGEMENTSCREEN";
 	}
@@ -43,7 +48,6 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 	 */
 	@Override
 	public JPanel initialize() {
-		card = new JPanel();
 		card.setLayout(null);
 		
 		JLabel title = new JLabel("Recensioni in esame");
@@ -59,22 +63,21 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 		list.setOpaque(false);
 		list.setForeground(Color.WHITE);
 		list.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 10));
-		list.setBounds(43, 101, 306, 341);
+		list.setBounds(10, 106, 354, 284);
 		
 		card.add(list);
 		
 		JButton btnApprova = new JButton("Approva");
-		/*btnApprova.addActionListener(new ActionListener() {
+		btnApprova.setFocusable(false);
+		btnApprova.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(list.isSelectionEmpty()){
 					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima la recensione nella lista.");
 			}else{
 				try {
-					Review review = new Review();
-					JDBCReviewManager.manageReview(review, true);
-					
-					JOptionPane.showMessageDialog(card, "Richiesta approvata con successo.");
-					JDBCMessageManager.postMessage(new Message("La recensione che avevi scritto per " + review.getGame().getGameTitle() + " è stata approvata!", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), ));
+					JDBCReviewManager.manageReview(getReviewFromList(list.getSelectedValue()), true);
+					JOptionPane.showMessageDialog(card, "Recensione approvata con successo.");
+					JDBCMessageManager.postMessage(new Message("La recensione che avevi scritto per " + getReviewFromList(list.getSelectedValue()).getGamename() + " è stata approvata!", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), getReviewFromList(list.getSelectedValue()).getUsername()));
 					model.remove(list.getSelectedIndex());
 				} catch (DatabaseConnectionException | SQLException e1) {
 					if(e1 instanceof DatabaseConnectionException){
@@ -87,21 +90,45 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 					}
 				}
 			}
-		  });*/
+		  });
 		btnApprova.setBackground(Color.BLACK);
 		btnApprova.setForeground(Color.WHITE);
 		btnApprova.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
-		btnApprova.setBounds(359, 129, 116, 36);
+		btnApprova.setBounds(374, 129, 116, 36);
 		card.add(btnApprova);
 		
 		JButton btnRespingi = new JButton("Respingi");
+		btnRespingi.setFocusable(false);
+		btnRespingi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(list.isSelectionEmpty()){
+					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima la recensione nella lista.");
+			}else{
+				try {
+					JDBCReviewManager.manageReview(getReviewFromList(list.getSelectedValue()), false);
+					JOptionPane.showMessageDialog(card, "Recensione respinta con successo.");
+					JDBCMessageManager.postMessage(new Message("La recensione che avevi scritto per " + getReviewFromList(list.getSelectedValue()).getGamename() + " è stata respinta. Attieniti più alle linee guida in futuro.", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), getReviewFromList(list.getSelectedValue()).getUsername()));
+					model.remove(list.getSelectedIndex());
+				} catch (DatabaseConnectionException | SQLException e1) {
+					if(e1 instanceof DatabaseConnectionException){
+						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: database offline.");
+						ScreenController.setPreviousScreen(screenName);
+					}else if(e1 instanceof SQLException){
+						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: problemi con il database.");
+						ScreenController.setPreviousScreen(screenName);
+						}
+					}
+				}
+			}
+		});
 		btnRespingi.setForeground(Color.WHITE);
 		btnRespingi.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		btnRespingi.setBackground(Color.BLACK);
-		btnRespingi.setBounds(359, 180, 116, 36);
+		btnRespingi.setBounds(374, 176, 116, 36);
 		card.add(btnRespingi);
 		
 		JButton back = new JButton("Indietro");
+		back.setFocusable(false);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ScreenController.setPreviousScreen(screenName);
@@ -110,7 +137,7 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 		back.setForeground(Color.WHITE);
 		back.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		back.setBackground(Color.BLACK);
-		back.setBounds(10, 453, 116, 36);
+		back.setBounds(37, 412, 116, 36);
 		card.add(back);
 		
 		JLabel background = new JLabel("");
@@ -118,25 +145,36 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		
+		list.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		        @SuppressWarnings("unchecked")
+				JList<String> list = (JList<String>)evt.getSource();
+		        if (evt.getClickCount() == 2) {
+		            // Double-click detected
+		        	JTextArea msg = new JTextArea(getReviewFromList(list.getSelectedValue()).getText());
+		        	UIManager.put("OptionPane.minimumSize", new Dimension(500,300));
+		        	msg.setLineWrap(true);
+		        	msg.setWrapStyleWord(true);
+		        	JScrollPane scrollPane = new JScrollPane(msg);
+		        	JOptionPane.showMessageDialog(card, scrollPane, "Utente: " + getReviewFromList(list.getSelectedValue()).getUsername() + "   " + "Gioco: " +  getReviewFromList(list.getSelectedValue()).getGamename() + "   " + "Voto:" + getReviewFromList(list.getSelectedValue()).getVote() + "/5", JOptionPane.INFORMATION_MESSAGE);
+		        	UIManager.put("OptionPane.minimumSize", new Dimension(550,50));
+		        }
+		    }
+		});
+		
 		return card;
 	}
 
-	@Override
-	protected void clearTextFields() {
-	
-	}
+
 	
 	public void populateList(){
 		try {
 			reviews = JDBCReviewManager.getPendingReviews();
-			listRowToReview = new TreeMap<Integer, Review>();
 			model = new DefaultListModel<String>();
-			int i = 0;
 			for(Review r : reviews){
 				String row;
-				row = r.getUsername() + " - " + r.getGamename() + " - Voto: " + r.getVote() + " - " + "\"" + r.getText().substring(0, 20) + "...\"";
+				row = "Utente: " + r.getUsername() + "   " + "Gioco: " +  r.getGamename() + "   " + "Voto:" + r.getVote() + "/5";
 				model.addElement(row);
-				listRowToReview.put(i++, r);
 			}
 			list.setModel(model);
 		} catch (DatabaseConnectionException | SQLException e) {
@@ -148,5 +186,14 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 				ScreenController.setPreviousScreen(screenName);
 			}
 		}
+	}
+	
+	private Review getReviewFromList(String row){
+		for(Review r : reviews){
+			if(row.contains(r.getGamename()) && row.contains(r.getUsername())){
+				return r;
+			}
+		}
+		return null;
 	}
 }

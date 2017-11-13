@@ -1,12 +1,14 @@
 package it.univaq.teamvisal.java;
 
-public abstract class ScreenViewSuper {
+import javax.swing.JPanel;
+
+public class ScreenViewSuper {
 
 	protected String screenName;
+	protected JPanel card = new JPanel();
 	
 	public String getScreenName(){
 		return screenName;
 	}
 	
-	abstract protected void clearTextFields();
 }

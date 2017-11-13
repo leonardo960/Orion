@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java;
+package it.univaq.teamvisal.java.business.model;
 
 public class Actor {
 	protected String username, password;

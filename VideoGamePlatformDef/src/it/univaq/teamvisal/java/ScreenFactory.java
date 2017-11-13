@@ -1,5 +1,6 @@
 package it.univaq.teamvisal.java;
 
+import it.univaq.teamvisal.java.business.impl.ScreenController;
 import it.univaq.teamvisal.java.presentation.GameProfileView;
 import it.univaq.teamvisal.java.presentation.GameReviewView;
 import it.univaq.teamvisal.java.presentation.GameSelectionView;
@@ -14,53 +15,42 @@ import it.univaq.teamvisal.java.presentation.UserManagementView;
 import it.univaq.teamvisal.java.presentation.UserProfileView;
 import it.univaq.teamvisal.java.presentation.UserRegistrationView;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
+import it.univaq.teamvisal.java.presentation.WriteReviewView;
 
 public class ScreenFactory {
-	private final static String WELCOMESCREEN = "WELCOMESCREEN";
-	private final static String LOGINSCREEN = "LOGINSCREEN";
-	private final static String USERREGISTRATIONSCREEN = "USERREGISTRATIONSCREEN";
-	private final static String MODERATORREGISTRATIONSCREEN = "MODERATORREGISTRATIONSCREEN";
-	private final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
-	private final static String USERPROFILESCREEN = "USERPROFILESCREEN";
-	private final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
-	private final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
-	private final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
-	private final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
-	private final static String GAMESELECTIONSCREEN = "GAMESELECTIONSCREEN";
-	private final static String REVIEWMANAGEMENTSCREEN = "REVIEWMANAGEMENTSCREEN";
-	private final static String GAMEPROFILESCREEN = "GAMEPROFILESCREEN";
-	private final static String GAMEREVIEWSCREEN = "GAMEREVIEWSCREEN";
 	
 	public static ScreenView produceScreen(String screenType){
 		switch(screenType){
-		case WELCOMESCREEN:
+		case ScreenController.WELCOMESCREEN:
 			return new WelcomeScreenView();
-		case LOGINSCREEN:
+		case ScreenController.LOGINSCREEN:
 			return new LoginScreenView();
-		case USERREGISTRATIONSCREEN:
+		case ScreenController.USERREGISTRATIONSCREEN:
 			return new UserRegistrationView();
-		case MODERATORREGISTRATIONSCREEN:
+		case ScreenController.MODERATORREGISTRATIONSCREEN:
 			return new ModeratorRegistrationView();
-		case USERHOMEPAGESCREEN:
+		case ScreenController.USERHOMEPAGESCREEN:
 			return new UserHomepageView();
-		case USERPROFILESCREEN:
+		case ScreenController.USERPROFILESCREEN:
 			return new UserProfileView();
-		case MODERATORFUNCTIONSSCREEN:
+		case ScreenController.MODERATORFUNCTIONSSCREEN:
 			return new ModeratorFunctionsView();
-		case USERMANAGEMENTSCREEN:
+		case ScreenController.USERMANAGEMENTSCREEN:
 			return new UserManagementView();
-		case MODERATORREQUESTSSCREEN:
+		case ScreenController.MODERATORREQUESTSSCREEN:
 			return new ModeratorRequestsView();
-		case MODERATORDERANKSCREEN:
+		case ScreenController.MODERATORDERANKSCREEN:
 			return new ModeratorDerankView();
-		case GAMESELECTIONSCREEN:
+		case ScreenController.GAMESELECTIONSCREEN:
 			return new GameSelectionView();
-		case REVIEWMANAGEMENTSCREEN:
+		case ScreenController.REVIEWMANAGEMENTSCREEN:
 			return new ReviewManagementView();
-		case GAMEPROFILESCREEN:
+		case ScreenController.GAMEPROFILESCREEN:
 			return new GameProfileView();
-		case GAMEREVIEWSCREEN:
+		case ScreenController.GAMEREVIEWSCREEN:
 			return new GameReviewView();
+		case ScreenController.WRITEREVIEWSCREEN:
+			return new WriteReviewView();
 		default:
 			return null;
 		}

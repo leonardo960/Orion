@@ -17,11 +17,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -29,16 +27,13 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.TreeMap;
 
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
 
 public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView {
 	private JList<String> list;
-	private JPanel card;
 	private TreeMap<String, String> modRequests;
 	private DefaultListModel<String> model;
 	
@@ -50,7 +45,6 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 	 */
 	@Override
 	public JPanel initialize() {
-		card = new JPanel();
 		card.setLayout(null);
 		
 		list = new JList<String>();
@@ -62,11 +56,11 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		list.setBounds(33, 108, 235, 266);
 		list.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
-		        JList<String> list = (JList<String>)evt.getSource();
+		        @SuppressWarnings("unchecked")
+				JList<String> list = (JList<String>)evt.getSource();
 		        if (evt.getClickCount() == 2) {
 		            // Double-click detected
 		        	JTextArea msg = new JTextArea(modRequests.get(list.getSelectedValue()));
-		        	
 		        	UIManager.put("OptionPane.minimumSize", new Dimension(500,300));
 		        	msg.setLineWrap(true);
 		        	msg.setWrapStyleWord(true);
@@ -166,11 +160,7 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		return card;
 	}
 
-	@Override
-	protected void clearTextFields() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	public void populateList(){
 		try {

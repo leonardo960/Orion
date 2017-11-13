@@ -4,8 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,16 +14,11 @@ import javax.swing.JPanel;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.Color;
-import java.awt.SystemColor;
+
 
 public class WelcomeScreenView extends ScreenViewSuper implements ScreenView {
 
@@ -40,9 +34,6 @@ public class WelcomeScreenView extends ScreenViewSuper implements ScreenView {
 	 * @wbp.parser.entryPoint
 	 */
 	public JPanel initialize(){
-		
-		
-		JPanel card = new JPanel();
 		JButton userRegistrationButton = new JButton("Registrazione Utente");
 		userRegistrationButton.setForeground(Color.WHITE);
 		userRegistrationButton.setFocusable(false);
@@ -98,7 +89,7 @@ public class WelcomeScreenView extends ScreenViewSuper implements ScreenView {
 			  {
 			   JOptionPane.showMessageDialog(
 					   null, 
-					   "Piattaforma creata dal Team Visal. Versione 1.1",
+					   "Piattaforma creata dal Team Visal. Versione 2.0",
 			   	        "Info",
 			   	        JOptionPane.INFORMATION_MESSAGE
 			   	       );
@@ -117,15 +108,6 @@ public class WelcomeScreenView extends ScreenViewSuper implements ScreenView {
 	
 		
 		return card;
-		
-		
 	}
 
-
-
-	@Override
-	protected void clearTextFields() {
-		// TODO Auto-generated method stub
-		//THIS METHOD WILL NEVER BE CALLED HERE FOR THE LACK OF JTEXTCOMPONENTS
-	}
 }

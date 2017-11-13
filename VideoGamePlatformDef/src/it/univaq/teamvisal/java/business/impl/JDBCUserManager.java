@@ -2,7 +2,6 @@ package it.univaq.teamvisal.java.business.impl;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,11 +12,10 @@ import java.util.List;
 import java.util.TreeMap;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.model.Trophy;
 import it.univaq.teamvisal.java.business.model.User;
 
 public class JDBCUserManager extends JDBCManager {
-	//Bisognerà vedere quand'è che effettivamente si connette al DB
-	//E quando invece opera solo in RAM; comunque fa entrambe le cose JDBCUserManager
 	
 	
 	static private User currentUser;
@@ -89,7 +87,10 @@ public class JDBCUserManager extends JDBCManager {
 		u.setType(type);
 		u.setLevel(level);
 		
-		String query2 = "SELECT TIME FROM ACHIEVEMENT WHERE PLAYER = ?";
+		rs.close();
+		statement.close();
+		
+		String query2 = "select trophy, time from achievement where player = ?";
 		PreparedStatement ps = con.prepareStatement(query2);
 		
 		ps.setString(1, username);
@@ -97,9 +98,11 @@ public class JDBCUserManager extends JDBCManager {
 		ResultSet rs2 = ps.executeQuery();
 		
 		while(rs2.next()){
-			u.getLvlDates().add(rs2.getDate("time"));
+			u.getTrophies().put(new Trophy(rs2.getString("trophy")), rs2.getDate("time"));
 		}
 		
+		ps.close();
+		rs2.close();
 		
 		String query4 = "SELECT * FROM mod_request WHERE mod_name = ?";
 		PreparedStatement s4 = con.prepareStatement(query4);
@@ -112,16 +115,11 @@ public class JDBCUserManager extends JDBCManager {
 			u.setRequestSent(false);
 		}
 			
-		
+		s4.close();
+		rs4.close();
 		
 		
 		con.close();
-		statement.close();
-		ps.close();
-		rs.close();
-		rs2.close();
-		s4.close();
-		rs4.close();
 		
 		return u;
 	}
@@ -166,22 +164,7 @@ public class JDBCUserManager extends JDBCManager {
 		return currentUser != null;
 	}
 
-	public static void syncDB() throws DatabaseConnectionException, SQLException {
-		Connection con = dbConnect();
-		
-		String query = "UPDATE USER SET exp = ? , level= ? WHERE username = ?";
-		
-		PreparedStatement ps = con.prepareStatement(query);
-		
-		ps.setInt(1, currentUser.getExp());
-		ps.setString(2, currentUser.getLevel());
-		ps.setString(3, currentUser.getUsername());
-		
-		//Inserire aggiornamento dei trofei nel db
-		
-		con.close();
-		ps.close();
-	}
+	
 	
 	public static boolean sendModRequest(String pitch) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
@@ -273,5 +256,153 @@ public class JDBCUserManager extends JDBCManager {
 		statement.close();
 		con.close();
 	}
+	
+	public static void syncDB() throws DatabaseConnectionException, SQLException {
+		User databaseUser = doesUserExist(currentUser.getUsername(), currentUser.getPassword());
+		Connection con = dbConnect();
+		
+		if(databaseUser.getLevel().equals(currentUser.getLevel())){
+			String query = "update user set exp = ? where username = ?";
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, currentUser.getExp());
+			ps.setString(2, currentUser.getUsername());
+			
+			ps.executeUpdate();
+			
+			ps.close();
+		}else{
+			String query = "update user set exp = ?, level = ? where username = ?";
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, currentUser.getExp());
+			ps.setString(2, currentUser.getLevel());
+			ps.setString(3, currentUser.getUsername());
+			
+			ps.executeUpdate();
+			
+			ps.close();
+			
+			String query2 = "insert into achievement values (?, ?, ?)";
+			
+			PreparedStatement ps2 = con.prepareStatement(query2);
+			ps2.setString(1, currentUser.getUsername());
+			
+			int trophiesEarned = currentUser.getTrophies().size() - databaseUser.getTrophies().size();
+			switch(currentUser.getLevel()){
+			case "Sergente":
+				ps2.setString(2, "Trofeo Lira");
+				ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Lira")));
+				ps2.executeUpdate();
+				break;
+			case "Capo di Prima Classe":
+				if(trophiesEarned == 1){
+					ps2.setString(2, "Trofeo Bilancia");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Bilancia")));
+					ps2.executeUpdate();
+				}else{
+					ps2.setString(2, "Trofeo Lira");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Lira")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Bilancia");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Bilancia")));
+					ps2.executeUpdate();
+				}
+				break;
+			case "Guardiamarina":
+				if(trophiesEarned == 1){
+				ps2.setString(2, "Trofeo Paradiso");
+				ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Paradiso")));
+				ps2.executeUpdate();
+				}else if(trophiesEarned == 2){
+				ps2.setString(2, "Trofeo Lira");
+				ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Lira")));
+				ps2.executeUpdate();
+				ps2.setString(2, "Trofeo Bilancia");
+				ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Bilancia")));
+				ps2.executeUpdate();
+				}else{
+					ps2.setString(2, "Trofeo Lira");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Lira")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Bilancia");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Bilancia")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Paradiso");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Paradiso")));
+					ps2.executeUpdate();
+				}
+				break;
+			case "Ammiraglio":
+				if(trophiesEarned == 1){
+					ps2.setString(2, "Trofeo Orion");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Orion")));
+					ps2.executeUpdate();
+				}else if(trophiesEarned == 2){
+					ps2.setString(2, "Trofeo Paradiso");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Paradiso")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Orion");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Orion")));
+					ps2.executeUpdate();
+				}else if(trophiesEarned == 3){
+					ps2.setString(2, "Trofeo Bilancia");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Bilancia")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Paradiso");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Paradiso")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Orion");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Orion")));
+					ps2.executeUpdate();
+				}else{
+					ps2.setString(2, "Trofeo Lira");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Lira")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Bilancia");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Bilancia")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Paradiso");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Paradiso")));
+					ps2.executeUpdate();
+					ps2.setString(2, "Trofeo Orion");
+					ps2.setDate(3, currentUser.getTrophies().get(new Trophy("Trofeo Orion")));
+					ps2.executeUpdate();
+				}
+				break;
+			}
+			
+			
+			ps2.close();
+			
+		}
+		
+		con.close();
+	}
+	
+	public static void updateUserExp(int exp) throws DatabaseConnectionException, SQLException{
+		currentUser.setExp(currentUser.getExp() + exp);
+		Calendar cal = Calendar.getInstance();
+		Date currentDate = new Date(cal.getTimeInMillis());
+		if(currentUser.getExp() >= 100 && currentUser.getTrophies().size() == 1){
+			currentUser.getTrophies().put(new Trophy("Trofeo Lira"), currentDate);
+			currentUser.setLevel("Sergente");
+		}
+		if(currentUser.getExp() >= 300 && currentUser.getTrophies().size() == 2){
+			currentUser.getTrophies().put(new Trophy("Trofeo Bilancia"), currentDate);
+			currentUser.setLevel("Capo di Prima Classe");
+		}
+		if(currentUser.getExp() >= 600 && currentUser.getTrophies().size() == 3){
+			currentUser.getTrophies().put(new Trophy("Trofeo Paradiso"), currentDate);
+			currentUser.setLevel("Guardiamarina");
+		}
+		if(currentUser.getExp() >= 1000 && currentUser.getTrophies().size() == 4){
+			currentUser.getTrophies().put(new Trophy("Trofeo Orion"), currentDate);
+			currentUser.setLevel("Ammiraglio");
+		}
+		syncDB();
+	}
+	
+	
 	
 }

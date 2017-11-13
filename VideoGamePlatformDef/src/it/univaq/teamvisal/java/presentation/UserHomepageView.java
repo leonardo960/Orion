@@ -30,8 +30,6 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class UserHomepageView extends ScreenViewSuper implements ScreenView {
-	
-	private JPanel card;
 	private LogoutController logoutController;
 	private JLabel welcomeLabel;
 	private JButton modRequestButton;
@@ -48,7 +46,6 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 	 * @wbp.parser.entryPoint
 	 */
 	public JPanel initialize() {
-		card = new JPanel();
 		card.setLayout(null);
 		
 		welcomeLabel = new JLabel("Benvenuto " + JDBCUserManager.getCurrentUser().getUsername() + "!");
@@ -160,11 +157,6 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 		card.add(background);
 		
 		return card;
-	}
-
-	@Override
-	protected void clearTextFields() {
-		//NEVER CALLED
 	}
 	
 	public void setRequestButton(boolean value){

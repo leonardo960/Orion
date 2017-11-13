@@ -25,7 +25,6 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 	 */
 	@Override
 	public JPanel initialize() {
-		JPanel card = new JPanel();
 		card.setLayout(null);
 		
 		JButton handleUsers = new JButton("Gestisci Utenza");
@@ -46,6 +45,7 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		btnIndietro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ScreenController.setPreviousScreen(screenName);
+				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});
 		btnIndietro.setForeground(Color.WHITE);
@@ -58,7 +58,8 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		btnGestisciRecensioni.setFocusable(false);
 		btnGestisciRecensioni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				ScreenController.setScreen("REVIEWMANAGEMENTSCREEN");
+				((ReviewManagementView) ScreenController.getLoadedScreens().get("REVIEWMANAGEMENTSCREEN")).populateList();
 			}
 		});
 		btnGestisciRecensioni.setForeground(Color.WHITE);
@@ -84,10 +85,6 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		return card;
 	}
 
-	@Override
-	protected void clearTextFields() {
-		
-		
-	}
+
 
 }

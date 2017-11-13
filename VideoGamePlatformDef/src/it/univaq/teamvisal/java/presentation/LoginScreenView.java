@@ -6,14 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.NoUserException;
@@ -41,9 +39,7 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public JPanel initialize() {
-		JPanel card = new JPanel();
-		
+	public JPanel initialize() {	
 		usernameField = new JTextField("");
 		usernameField.setBounds(167, 176, 200, 30);
 		JButton loginButton = new JButton("Autenticati");

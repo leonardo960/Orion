@@ -28,9 +28,8 @@ import java.awt.event.ActionEvent;
 public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	
 	private JList<String> list;
-	private DefaultListModel model;
+	private DefaultListModel<String> model;
 	
-	private JPanel card;
 	public ModeratorDerankView(){
 		screenName = "MODERATORDERANKSCREEN";
 	}
@@ -40,10 +39,9 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	 */
 	@Override
 	public JPanel initialize() {
-		card = new JPanel();
 		card.setLayout(null);
 		
-		list = new JList();
+		list = new JList<String>();
 		list.setBackground(Color.BLACK);
 		list.setForeground(Color.WHITE);
 		list.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
@@ -107,17 +105,13 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 		return card;
 	}
 
-	@Override
-	protected void clearTextFields() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	public void populateList(){
 		try {
 			List<String> stringList = JDBCUserManager.getModerators();
 			stringList.remove(JDBCUserManager.getCurrentUser().getUsername() + " - " + JDBCUserManager.getCurrentUser().getNome() + " " + JDBCUserManager.getCurrentUser().getCognome());
-			model = new DefaultListModel();
+			model = new DefaultListModel<String>();
 			for(String s : stringList){
 				model.addElement(s);
 			}
