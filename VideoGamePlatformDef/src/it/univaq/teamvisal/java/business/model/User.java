@@ -7,6 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * Model class which represents a user. It encapsulates all its attributes as well as
+ * setters/getters
+ * @author Leonardo Formichetti
+ *
+ */
 public class User extends Actor {
 	private String nome, cognome;
 	private String residenza;

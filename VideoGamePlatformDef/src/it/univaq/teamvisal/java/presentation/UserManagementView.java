@@ -14,6 +14,12 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView to display a menu for all functionalities related to User management for
+ * moderators
+ * @author Leonardo Formichetti
+ *
+ */
 public class UserManagementView extends ScreenViewSuper implements ScreenView {
 	
 	public UserManagementView(){
@@ -57,7 +63,7 @@ public class UserManagementView extends ScreenViewSuper implements ScreenView {
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		back.setForeground(Color.WHITE);

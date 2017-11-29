@@ -1,5 +1,11 @@
 package it.univaq.teamvisal.java.business.model;
 
+/**
+ * Model class which represents a message sent by moderators/the system and received by
+ * any user. It encapsulates all its attributes as well as setters/getters
+ * @author Leonardo Formichetti
+ *
+ */
 public class Message {
 	private String text;
 	private String sender;

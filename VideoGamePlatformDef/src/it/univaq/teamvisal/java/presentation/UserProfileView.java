@@ -17,6 +17,12 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView for the User to check his/her profile. All account information are displayed
+ * plus all the achievements the user has gained playing the games.
+ * @author Leonardo Formichetti
+ *
+ */
 public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 	private JLabel trofeo2, trofeo3, trofeo4, trofeo5;
 	private JLabel username, name, surname, exp, level;
@@ -64,7 +70,7 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});
@@ -135,6 +141,10 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 		return card;
 	}
 	
+	/**
+	 * Sets the dates when the user gained the various trophies available in the platform,
+	 * retrieving them thanks to the User DAO
+	 */
 	public void setTrophyDates(){
 		switch(JDBCUserManager.getCurrentUser().getTrophies().size()){
 		case 1:
@@ -172,6 +182,10 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 		}
 	}
 	
+	/**
+	 * Sets all the GUI components with the right data of the currentUser coming from the
+	 * User DAO
+	 */
 	public void setProfileInformation(){
 		username.setText("Username: " + JDBCUserManager.getCurrentUser().getUsername());
 		name.setText("Nome: " + JDBCUserManager.getCurrentUser().getNome());

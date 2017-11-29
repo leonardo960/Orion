@@ -15,6 +15,12 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView that serves as a menu for moderator to choose which functionality they
+ * wish to manage.
+ * @author Leonardo Formichetti
+ *
+ */
 public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenView {
 
 	public ModeratorFunctionsView(){
@@ -44,7 +50,7 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		btnIndietro.setFocusable(false);
 		btnIndietro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});

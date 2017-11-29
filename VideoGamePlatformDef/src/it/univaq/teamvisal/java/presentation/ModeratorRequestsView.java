@@ -32,6 +32,12 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView for moderators to check eventual currently pending moderator requests. There
+ * are two buttons to approve or reject requests and they are displayed in a List fashion
+ * @author Leonardo Formichetti
+ *
+ */
 public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView {
 	private JList<String> list;
 	private TreeMap<String, String> modRequests;
@@ -94,10 +100,10 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 				} catch (DatabaseConnectionException | SQLException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: database offline.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 					}else if(e1 instanceof SQLException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: problemi con il database.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 						}
 					}
 				}
@@ -123,10 +129,10 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 				} catch (DatabaseConnectionException | SQLException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: database offline.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 					}else if(e1 instanceof SQLException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: problemi con il database.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 						}
 					}
 				}
@@ -142,7 +148,7 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		back.setForeground(Color.WHITE);
@@ -161,7 +167,10 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 	}
 
 	
-	
+	/**
+	 * Populates the list of moderator requests asking the User DAO to return a List of them.
+	 * This method is called right after the Screen is switched.
+	 */
 	public void populateList(){
 		try {
 			modRequests = JDBCUserManager.getModeratorRequests();
@@ -173,10 +182,10 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		} catch (DatabaseConnectionException | SQLException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le richieste moderatore: database offline.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}else if(e instanceof SQLException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le richieste moderatore: problemi con il database.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		}
 	}

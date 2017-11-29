@@ -29,6 +29,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
+
+/**
+ * First ScreenView the User sees when he/she logs in the system. There's a menu with
+ * several options which link to other menus/functionalities.
+ * @author Leonardo Formichetti
+ *
+ */
 public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 	private LogoutController logoutController;
 	private JLabel welcomeLabel;
@@ -101,7 +108,7 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ScreenController.setPreviousScreen(screenName);
+					ScreenController.setPreviousScreen();
 					logoutController.logout();
 					((LoginScreenView) ScreenController.getLoadedScreens().get("LOGINSCREEN")).clearTextFields();
 					
@@ -159,18 +166,33 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 		return card;
 	}
 	
+	/**
+	 * Enables/Disables the button to send a moderator Request
+	 * @param value
+	 */
 	public void setRequestButton(boolean value){
 		modRequestButton.setEnabled(value);
 		modRequestButton.setVisible(value);
 	}
+	
+	/**
+	 * Enables/Disables the button to access the moderator panel
+	 * @param value
+	 */
 	public void setModeratorFunctionsButton(boolean value){
 		modFunctionsButton.setEnabled(value);
 		modFunctionsButton.setVisible(value);
 	}
+	/**
+	 * Updates the welcome message with the appropriate currentUser name
+	 */
 	public void updateUser(){
 		welcomeLabel.setText("Benvenuto " + JDBCUserManager.getCurrentUser().getUsername());
 	}
 	
+	/**
+	 * Checks if there's any Message waiting to be read by the currentUser
+	 */
 	public void updateMessages(){
 		try {
 			messages = JDBCMessageManager.checkForMessages();
@@ -184,6 +206,9 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 		}
 	}
 	
+	/**
+	 * Initiates a procedure which displays all pending messages for the User in succession
+	 */
 	private void displayMessages(){
 	if(messages.size() > 0){
 		for(Message message : messages){

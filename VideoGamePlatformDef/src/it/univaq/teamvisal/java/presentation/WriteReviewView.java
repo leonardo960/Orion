@@ -29,7 +29,12 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
-
+/**
+ * ScreenView for the Screen where a Review for a particular Game can be written
+ * and sent by the User.
+ * @author Leonardo Formichetti
+ *
+ */
 public class WriteReviewView extends ScreenViewSuper implements ScreenView {
 	private JTextArea txtrScriviLaTua;
 	private JLabel wordCount;
@@ -87,7 +92,7 @@ public class WriteReviewView extends ScreenViewSuper implements ScreenView {
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		back.setFocusable(false);
@@ -192,7 +197,7 @@ public class WriteReviewView extends ScreenViewSuper implements ScreenView {
 				try {
 					JDBCReviewManager.sendReview(new Review(JDBCUserManager.getCurrentUser().getUsername(), chosenGame.getGameTitle(), vote, txtrScriviLaTua.getText()));
 					JOptionPane.showMessageDialog(card, "Recensione inviata correttamente! Verrà sottoposta ad analisi e poi eventualmente pubblicata. Riceverai un messaggio di conferma.");
-					ScreenController.setPreviousScreen(screenName);
+					ScreenController.setPreviousScreen();
 					((GameReviewView) ScreenController.getLoadedScreens().get("GAMEREVIEWSCREEN")).checkSendButtonVisibility();
 				} catch (DatabaseConnectionException | SQLException e) {
 					if(e instanceof DatabaseConnectionException){
@@ -208,7 +213,11 @@ public class WriteReviewView extends ScreenViewSuper implements ScreenView {
 		
 		return card;
 	}
-
+	
+	/**
+	 * Clears the ScreenView's JTextComponents so that when the User returns to
+	 * the ScreenView they are empty again and ready to be filled.
+	 */
 	protected void clearTextFields() {
 		txtrScriviLaTua.setText("Scrivi la tua recensione!");
 		radioButton_2.setSelected(true);
@@ -217,7 +226,10 @@ public class WriteReviewView extends ScreenViewSuper implements ScreenView {
 		radioButton_3.setSelected(false);
 		radioButton_4.setSelected(false);
 	}
-	
+	/**
+	 * Sets the Game for which the Review is going to be written.
+	 * @param chosenGame the game the Review is being written for
+	 */
 	public void setGame(Game chosenGame){
 		this.chosenGame = chosenGame;
 		title.setText("Scrivi recensione per " + chosenGame.getGameTitle());

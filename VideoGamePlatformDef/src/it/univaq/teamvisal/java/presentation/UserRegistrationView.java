@@ -30,7 +30,13 @@ import java.awt.HeadlessException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
-
+/**
+ * ScreenView for the User Registration Screen. Here the User can register a new account,
+ * provided he doesn't use an already picked username. Neither the username nor the password
+ * have any restrictions. Database update is immediate.
+ * @author Leonardo Formichetti
+ *
+ */
 public class UserRegistrationView extends ScreenViewSuper implements ScreenView {
 	private JTextField name;
 	private JTextField surname;
@@ -85,7 +91,7 @@ public class UserRegistrationView extends ScreenViewSuper implements ScreenView 
 			  public void actionPerformed(ActionEvent e)
 			  {
 				  clearTextFields();
-				  ScreenController.setPreviousScreen(screenName);
+				  ScreenController.setPreviousScreen();
 			  }
 		});
 		card.setLayout(null);
@@ -156,19 +162,19 @@ public class UserRegistrationView extends ScreenViewSuper implements ScreenView 
 							JOptionPane.showMessageDialog(card, "Registrazione avvenuta con successo!");
 							JDBCMessageManager.postMessage(new Message("Benvenuto su Orion! Messaggi come questo verrano usati per comunicarti ogni sorta di notifica. Buon Divertimento!", "Sistema", username.getText()));
 							clearTextFields();
-							ScreenController.setPreviousScreen(screenName);
+							ScreenController.setPreviousScreen();
 					}} catch (HeadlessException | SQLException | UserAlreadyExistsException | DatabaseConnectionException e) {
 						if(e instanceof SQLException){
 							JOptionPane.showMessageDialog(card, "Registrazione fallita: problemi con il database.");
 							clearTextFields();
-							ScreenController.setPreviousScreen(screenName);
+							ScreenController.setPreviousScreen();
 						}else if(e instanceof UserAlreadyExistsException){
 							JOptionPane.showMessageDialog(card, "Registrazione fallita: username già in uso.");
 							username.setText("");
 						}else if(e instanceof DatabaseConnectionException){
 							JOptionPane.showMessageDialog(card, "Registrazione fallita: database offline.");
 							clearTextFields();
-							ScreenController.setPreviousScreen(screenName);
+							ScreenController.setPreviousScreen();
 						}
 					}
 				}else{
@@ -179,7 +185,10 @@ public class UserRegistrationView extends ScreenViewSuper implements ScreenView 
 		
 		return card;
 	}
-
+	/**
+	 * Clears the ScreenView's JTextComponents so that when the User returns to
+	 * the ScreenView they are empty again and ready to be filled.
+	 */
 	protected void clearTextFields() {
 		username.setText("");
 		password.setText("");

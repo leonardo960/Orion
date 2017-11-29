@@ -26,6 +26,12 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
 
+/**
+ * ScreenView for the Login screen. There are 2 bars, one for the username and the
+ * other one for the password and a confirm button.
+ * @author Leonardo Formichetti
+ *
+ */
 public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 	private JPasswordField passwordField;
 	private LoginController loginController;
@@ -64,7 +70,7 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				clearTextFields();
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		
@@ -131,11 +137,11 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 						if(e instanceof DatabaseConnectionException){
 							JOptionPane.showMessageDialog(card, "Login fallito: problemi con il database.");
 							clearTextFields();
-							ScreenController.setPreviousScreen(screenName);
+							ScreenController.setPreviousScreen();
 						}else if(e instanceof SQLException){
 							JOptionPane.showMessageDialog(card, "Login fallito: problemi con il database.");
 							clearTextFields();
-							ScreenController.setPreviousScreen(screenName);
+							ScreenController.setPreviousScreen();
 						}else if(e instanceof NoUserException){
 							JOptionPane.showMessageDialog(card, "Login fallito: lo username o la password sono errati.");
 						}
@@ -150,7 +156,10 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 		return card;
 	}
 
-	
+	/**
+	 * Clears the username and password fields so that when the screen is viewed again,
+	 * they're already blank for the user
+	 */
 	public void clearTextFields() {
 		passwordField.setText("");
 		usernameField.setText("");

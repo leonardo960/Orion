@@ -10,6 +10,12 @@ import javax.swing.text.DocumentFilter;
 import javax.swing.text.*;
 import java.awt.Toolkit;
  
+/**
+ * Helper class which defines a filter for JTextComponents that forces the user
+ * to input only a certain amount of characters.
+ * @author Leonardo Formichetti
+ *
+ */
 public class DocumentSizeFilter extends DocumentFilter {
     int maxCharacters;
     boolean DEBUG = false;

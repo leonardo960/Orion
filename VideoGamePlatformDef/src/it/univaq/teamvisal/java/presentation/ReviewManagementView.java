@@ -35,6 +35,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView for moderators to manage eventual currently pending game reviews. They are
+ * displayed in a List fashion and two buttons are provided to approve or reject them.
+ * @author Leonardo Formichetti
+ *
+ */
 public class ReviewManagementView extends ScreenViewSuper implements ScreenView {
 	
 	private JList<String> list;
@@ -82,10 +88,10 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 				} catch (DatabaseConnectionException | SQLException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: database offline.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 					}else if(e1 instanceof SQLException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: problemi con il database.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 						}
 					}
 				}
@@ -112,10 +118,10 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 				} catch (DatabaseConnectionException | SQLException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: database offline.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 					}else if(e1 instanceof SQLException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: problemi con il database.");
-						ScreenController.setPreviousScreen(screenName);
+						ScreenController.setPreviousScreen();
 						}
 					}
 				}
@@ -131,7 +137,7 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 		back.setFocusable(false);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		back.setForeground(Color.WHITE);
@@ -166,7 +172,10 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 	}
 
 
-	
+	/**
+	 * Populates the list of reviews asking the Review DAO to return a List of them.
+	 * This method is called right after the Screen is switched.
+	 */
 	public void populateList(){
 		try {
 			reviews = JDBCReviewManager.getPendingReviews();
@@ -180,14 +189,20 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 		} catch (DatabaseConnectionException | SQLException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensione in esame: database offline.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}else if(e instanceof SQLException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensioni in esame: problemi con il database.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		}
 	}
 	
+	/**
+	 * Convenience method to return a Review object given a String row from the JList
+	 * of reviews.
+	 * @param row
+	 * @return
+	 */
 	private Review getReviewFromList(String row){
 		for(Review r : reviews){
 			if(row.contains(r.getGamename()) && row.contains(r.getUsername())){

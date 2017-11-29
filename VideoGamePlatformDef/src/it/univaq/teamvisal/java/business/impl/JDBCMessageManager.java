@@ -12,10 +12,19 @@ import java.util.List;
 
 import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Message;
-
+/**
+ * DAO which manages all storage and retrieval of Messages
+ * @author Leonardo Formichetti
+ *
+ */
 public class JDBCMessageManager extends JDBCManager {
 
-	
+	/**
+	 * Stores a message waiting for the User to read it
+	 * @param message the Message to be stored
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static void postMessage(Message message) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
 		String sql = "insert into message (sender, text, receiver) values (?, ?, ?)";
@@ -30,6 +39,12 @@ public class JDBCMessageManager extends JDBCManager {
 		con.close();
 	}
 	
+	/**
+	 * Checks whether there are Messages waiting to be read by the User
+	 * @return a List of Messages for the User to read
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static List<Message> checkForMessages() throws DatabaseConnectionException, SQLException{
 		List<Message> messages = new LinkedList<Message>();
 		
@@ -48,7 +63,12 @@ public class JDBCMessageManager extends JDBCManager {
 		
 		return messages;
 	}
-	
+	/**
+	 * Deletes the Message associated with the specified ID
+	 * @param id the Message ID
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static void deleteMessage(int id) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
 		String sql = "delete from message where id = ?";

@@ -25,6 +25,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView for the derank functionality managed by moderators. It lists all the current
+ * moderators in Orion with a button to confirm the derank.
+ * @author Leonardo Formichetti
+ *
+ */
 public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	
 	private JList<String> list;
@@ -52,7 +58,7 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		back.setBackground(Color.BLACK);
@@ -106,7 +112,10 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	}
 
 	
-	
+	/**
+	 * Populates the list of moderators asking the User DAO to return a List of them.
+	 * This method is called right after the Screen is switched.
+	 */
 	public void populateList(){
 		try {
 			List<String> stringList = JDBCUserManager.getModerators();
@@ -119,10 +128,10 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 		} catch (DatabaseConnectionException | SQLException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare la lista dei moderatori: database offline.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}else if(e instanceof SQLException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare la lista dei moderatori: problemi con il database.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		}
 		

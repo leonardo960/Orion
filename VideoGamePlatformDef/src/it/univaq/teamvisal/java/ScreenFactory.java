@@ -1,6 +1,5 @@
 package it.univaq.teamvisal.java;
 
-import it.univaq.teamvisal.java.business.impl.ScreenController;
 import it.univaq.teamvisal.java.presentation.GameProfileView;
 import it.univaq.teamvisal.java.presentation.GameReviewView;
 import it.univaq.teamvisal.java.presentation.GameSelectionView;
@@ -17,39 +16,51 @@ import it.univaq.teamvisal.java.presentation.UserRegistrationView;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
 import it.univaq.teamvisal.java.presentation.WriteReviewView;
 
+/**
+ * Class which more or less adopts the Factory design pattern and whose functionality
+ * is to return an instance of a ScreenView given a certain screenType in the form
+ * of a String.
+ * @author Leonardo Formichetti
+ *
+ */
 public class ScreenFactory {
-	
+	/**
+	 * Main method of the class: it produces an instance of the ScreenView specified
+	 * by the String screenType.
+	 * @param screenType the screen's name to be produced
+	 * @return a new instance of the ScreenView
+	 */
 	public static ScreenView produceScreen(String screenType){
 		switch(screenType){
-		case ScreenController.WELCOMESCREEN:
+		case "WELCOMESCREEN":
 			return new WelcomeScreenView();
-		case ScreenController.LOGINSCREEN:
+		case "LOGINSCREEN":
 			return new LoginScreenView();
-		case ScreenController.USERREGISTRATIONSCREEN:
+		case "USERREGISTRATIONSCREEN":
 			return new UserRegistrationView();
-		case ScreenController.MODERATORREGISTRATIONSCREEN:
+		case "MODERATORREGISTRATIONSCREEN":
 			return new ModeratorRegistrationView();
-		case ScreenController.USERHOMEPAGESCREEN:
+		case "USERHOMEPAGESCREEN":
 			return new UserHomepageView();
-		case ScreenController.USERPROFILESCREEN:
+		case "USERPROFILESCREEN":
 			return new UserProfileView();
-		case ScreenController.MODERATORFUNCTIONSSCREEN:
+		case "MODERATORFUNCTIONSSCREEN":
 			return new ModeratorFunctionsView();
-		case ScreenController.USERMANAGEMENTSCREEN:
+		case "USERMANAGEMENTSCREEN":
 			return new UserManagementView();
-		case ScreenController.MODERATORREQUESTSSCREEN:
+		case "MODERATORREQUESTSSCREEN":
 			return new ModeratorRequestsView();
-		case ScreenController.MODERATORDERANKSCREEN:
+		case "MODERATORDERANKSCREEN":
 			return new ModeratorDerankView();
-		case ScreenController.GAMESELECTIONSCREEN:
+		case "GAMESELECTIONSCREEN":
 			return new GameSelectionView();
-		case ScreenController.REVIEWMANAGEMENTSCREEN:
+		case "REVIEWMANAGEMENTSCREEN":
 			return new ReviewManagementView();
-		case ScreenController.GAMEPROFILESCREEN:
+		case "GAMEPROFILESCREEN":
 			return new GameProfileView();
-		case ScreenController.GAMEREVIEWSCREEN:
+		case "GAMEREVIEWSCREEN":
 			return new GameReviewView();
-		case ScreenController.WRITEREVIEWSCREEN:
+		case "WRITEREVIEWSCREEN":
 			return new WriteReviewView();
 		default:
 			return null;

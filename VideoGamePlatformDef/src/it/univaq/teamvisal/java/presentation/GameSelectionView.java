@@ -29,6 +29,12 @@ import java.util.List;
 import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView for selecting which Game the User wants to play. It displays them in a
+ * List fashion.
+ * @author Leonardo Formichetti
+ *
+ */
 public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 
 	private JLabel titleLabel;
@@ -87,7 +93,7 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		backButton.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ScreenController.setPreviousScreen("GAMESELECTIONSCREEN");
+				ScreenController.setPreviousScreen();
 				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});
@@ -143,10 +149,10 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 		} catch (DatabaseConnectionException | SQLException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare i giochi: database offline.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}else if(e instanceof SQLException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare i giochi: problemi con il database.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		}
 	}

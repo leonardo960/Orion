@@ -27,6 +27,13 @@ import javax.swing.JTextArea;
 import java.sql.SQLException;
 
 
+/**
+ * ScreenView where users can actually write and send a request to be promoted to
+ * moderators. The aspiring moderator must add a pitch to convince the Orion staff
+ * to promote him/her.
+ * @author Leonardo Formichetti
+ *
+ */
 public class ModeratorRegistrationView extends ScreenViewSuper implements ScreenView {
 	private JTextArea txtrRaccontaciCosaTi;
 	private ModeratorRequestController moderatorRequestController;
@@ -59,7 +66,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 		
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 				((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 			}
 		});
@@ -119,7 +126,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 					moderatorRequestController.sendRequest(txtrRaccontaciCosaTi.getText());
 					JOptionPane.showMessageDialog(card, "Richiesta inviata con successo! Grazie del tuo interesse. Ti verrà inviato un messaggio dal sistema con l'esito della richiesta.");
 					((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setRequestButton(false);
-					ScreenController.setPreviousScreen(screenName);
+					ScreenController.setPreviousScreen();
 					((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 				} catch (DatabaseConnectionException | SQLException e) {
 					if(e instanceof DatabaseConnectionException){
@@ -134,7 +141,9 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 		return card;
 	}
 
-	
+	/**
+	 * Resets the pitch text area when the Screen is accessed again for convenience
+	 */
 	public void clearTextFields() {
 		txtrRaccontaciCosaTi.setText("Raccontaci cosa ti ha portato a voler lavorare con noi!");
 	}

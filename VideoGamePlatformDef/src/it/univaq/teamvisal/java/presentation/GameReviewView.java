@@ -34,6 +34,12 @@ import java.util.List;
 import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 
+/**
+ * ScreenView for viewing all the approved Reviews associated with a particular Game,
+ * displayed in a List fashion.
+ * @author Leonardo Formichetti
+ *
+ */
 public class GameReviewView extends ScreenViewSuper implements ScreenView {
 	private JLabel title;
 	private JList<String> list;
@@ -63,7 +69,7 @@ public class GameReviewView extends ScreenViewSuper implements ScreenView {
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		back.setFocusable(false);
@@ -154,10 +160,10 @@ public class GameReviewView extends ScreenViewSuper implements ScreenView {
 		} catch (DatabaseConnectionException | SQLException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensioni: database offline.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}else if(e instanceof SQLException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensioni: problemi con il database.");
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		}
 	}

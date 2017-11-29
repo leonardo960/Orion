@@ -16,6 +16,12 @@ import it.univaq.teamvisal.java.ScreenFactory;
 import it.univaq.teamvisal.java.ScreenView;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
 
+/**
+ * Main "engine" of the system and most important Controller class in charge of managing
+ * all the logic related to switching Screens.
+ * @author Leonardo Formichetti
+ *
+ */
 public class ScreenController {
 
 	private static ScreenView currentScreen;
@@ -24,25 +30,15 @@ public class ScreenController {
 	private static TreeMap<String, ScreenView> loadedScreens;
 	private static CardLayout screenManagerLayout;
 	
-	public final static String WELCOMESCREEN = "WELCOMESCREEN";
-	public final static String LOGINSCREEN = "LOGINSCREEN";
-	public final static String USERREGISTRATIONSCREEN = "USERREGISTRATIONSCREEN";
-	public final static String MODERATORREGISTRATIONSCREEN = "MODERATORREGISTRATIONSCREEN";
-	public final static String USERHOMEPAGESCREEN = "USERHOMEPAGESCREEN";
-	public final static String USERPROFILESCREEN = "USERPROFILESCREEN";
-	public final static String MODERATORFUNCTIONSSCREEN = "MODERATORFUNCTIONSSCREEN";
-	public final static String GAMESELECTIONSCREEN = "GAMESELECTIONSCREEN";
-	public final static String USERMANAGEMENTSCREEN = "USERMANAGEMENTSCREEN";
-	public final static String MODERATORREQUESTSSCREEN = "MODERATORREQUESTSSCREEN";
-	public final static String MODERATORDERANKSCREEN = "MODERATORDERANKSCREEN";
-	public final static String REVIEWMANAGEMENTSCREEN = "REVIEWMANAGEMENTSCREEN";
-	public final static String GAMEPROFILESCREEN = "GAMEPROFILESCREEN";
-	public final static String GAMEREVIEWSCREEN = "GAMEREVIEWSCREEN";
-	public final static String WRITEREVIEWSCREEN = "WRITEREVIEWSCREEN";
-	
 	private static LogoutController logoutController;
 
-	
+	/**
+	 * Asks the Screen Controller to switch to Screen screen. If the passed screen
+	 * had already been loaded in memory then it is simply showed; otherwise, it is
+	 * first created through the ScreenFactory.
+	 * @param screen the Screen the application is going to show
+	 * 
+	 */
 	public static void setScreen(String screen){
 		if(!loadedScreens.containsValue(currentScreen)){
 			loadedScreens.put(currentScreen.getScreenName(), currentScreen);
@@ -57,62 +53,78 @@ public class ScreenController {
 			screenManagerLayout.show(screenManager, screen);
 		}
 	}
-	
-	public static void setPreviousScreen(String currentScreen){
-		switch(currentScreen){
-		case WELCOMESCREEN:
+	/**
+	 * Asks the ScreenController to switch to the Screen that precedes the current
+	 * Screen in the application's logical display order. Doesn't need any param
+	 * since ScreenController keeps automatically track of the current Screen.
+	 */
+	public static void setPreviousScreen(){
+		switch(currentScreen.getScreenName()){
+		case "WELCOMESCREEN":
 			break;
-		case LOGINSCREEN:
-			screenManagerLayout.show(screenManager, WELCOMESCREEN);
+		case "LOGINSCREEN":
+			setScreen("WELCOMESCREEN");
 			break;
-		case USERREGISTRATIONSCREEN:
-			screenManagerLayout.show(screenManager, WELCOMESCREEN);
+		case "USERREGISTRATIONSCREEN":
+			setScreen("WELCOMESCREEN");
 			break;
-		case MODERATORREGISTRATIONSCREEN:
-			screenManagerLayout.show(screenManager, USERHOMEPAGESCREEN);
+		case "MODERATORREGISTRATIONSCREEN":
+			setScreen("USERHOMEPAGESCREEN");
 			break;
-		case USERHOMEPAGESCREEN:
-			screenManagerLayout.show(screenManager, WELCOMESCREEN);
+		case "USERHOMEPAGESCREEN":
+			setScreen("WELCOMESCREEN");
 			break;
-		case USERPROFILESCREEN:
-			screenManagerLayout.show(screenManager, USERHOMEPAGESCREEN);
+		case "USERPROFILESCREEN":
+			setScreen("USERHOMEPAGESCREEN");
 			break;
-		case MODERATORFUNCTIONSSCREEN:
-			screenManagerLayout.show(screenManager, USERHOMEPAGESCREEN);
+		case "MODERATORFUNCTIONSSCREEN":
+			setScreen("USERHOMEPAGESCREEN");
 			break;
-		case GAMESELECTIONSCREEN:
-			screenManagerLayout.show(screenManager, USERHOMEPAGESCREEN);
+		case "GAMESELECTIONSCREEN":
+			setScreen("USERHOMEPAGESCREEN");
 			break;
-		case USERMANAGEMENTSCREEN:
-			screenManagerLayout.show(screenManager, MODERATORFUNCTIONSSCREEN);
+		case "USERMANAGEMENTSCREEN":
+			setScreen("MODERATORFUNCTIONSSCREEN");
 		    break;
-		case MODERATORREQUESTSSCREEN:
-			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
+		case "MODERATORREQUESTSSCREEN":
+			setScreen("USERMANAGEMENTSCREEN");
 			break;
-		case MODERATORDERANKSCREEN:
-			screenManagerLayout.show(screenManager, USERMANAGEMENTSCREEN);
+		case "MODERATORDERANKSCREEN":
+			setScreen("USERMANAGEMENTSCREEN");
 			break;
-		case REVIEWMANAGEMENTSCREEN:
-			screenManagerLayout.show(screenManager, MODERATORFUNCTIONSSCREEN);
+		case "REVIEWMANAGEMENTSCREEN":
+			setScreen("MODERATORFUNCTIONSSCREEN");
 			break;
-		case GAMEPROFILESCREEN:
-			screenManagerLayout.show(screenManager, GAMESELECTIONSCREEN);
+		case "GAMEPROFILESCREEN":
+			setScreen("GAMESELECTIONSCREEN");
 			break;
-		case GAMEREVIEWSCREEN:
-			screenManagerLayout.show(screenManager, GAMEPROFILESCREEN);
+		case "GAMEREVIEWSCREEN":
+			setScreen("GAMEPROFILESCREEN");
 			break;
-		case WRITEREVIEWSCREEN:
-			screenManagerLayout.show(screenManager, GAMEREVIEWSCREEN);
+		case "WRITEREVIEWSCREEN":
+			setScreen("GAMEREVIEWSCREEN");
 			break;
 		default:
 			break;
 		}
 	}
 	
+	/**
+	 * Returns the TreeMap with screens' names as keys and screens themselves 
+	 * as values. Serves both the purposes of checking if a Screen has already
+	 * been loaded in memory and the retrieval of a Screen given its String name.
+	 * 
+	 * @return a TreeMap<String, ScreenView> as described above
+	 */
 	public static TreeMap<String, ScreenView> getLoadedScreens(){
 		return loadedScreens;
 	}
 	
+	/**
+	 * The very first method that gets called when the application is executed. Initiates
+	 * the View part of the application and sets the Welcome Screen as the first screen
+	 * displayed.
+	 */
 	public static void begin(){
 		logoutController = new LogoutController();
 		loadedScreens = new TreeMap<String, ScreenView>();
@@ -138,10 +150,7 @@ public class ScreenController {
 						}
 					}
 				}
-				
-			    }else{
-			    	//DO NOTHING
-			    } 
+			   }
 			  }else{
 				  System.exit(0);
 			  }
@@ -153,10 +162,10 @@ public class ScreenController {
 		window.add(screenManager);
 		
 		currentScreen = new WelcomeScreenView();
-		screenManager.add(currentScreen.initialize(), WELCOMESCREEN);
-		loadedScreens.put(WELCOMESCREEN, currentScreen);
+		screenManager.add(currentScreen.initialize(), "WELCOMESCREEN");
+		loadedScreens.put("WELCOMESCREEN", currentScreen);
 		screenManagerLayout = (CardLayout)(screenManager.getLayout());
-		screenManagerLayout.show(screenManager, WELCOMESCREEN);
+		screenManagerLayout.show(screenManager, "WELCOMESCREEN");
 		
 		window.setVisible(true);
 		window.setResizable(false);

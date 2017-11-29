@@ -1,7 +1,11 @@
 package it.univaq.teamvisal.java.business.model;
 
-import java.util.List;
-
+/**
+ * Model class which represents a videogame. It encapsulates all its attributes as well as
+ * setters/getters
+ * @author Leonardo Formichetti
+ *
+ */
 public class Game{
 	
 	private String gameTitle;

@@ -19,7 +19,12 @@ import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 
-
+/**
+ * First ScreenView any User sees when they first open the application. It allows the user
+ * to log in the system, create a new account or visualize the system info.
+ * @author Leonardo Formichetti
+ *
+ */
 public class WelcomeScreenView extends ScreenViewSuper implements ScreenView {
 
 	

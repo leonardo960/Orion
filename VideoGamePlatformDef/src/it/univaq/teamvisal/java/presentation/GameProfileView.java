@@ -20,7 +20,12 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
-
+/**
+ * ScreenView for the Game Profile Screen. There's a brief description of the Game and
+ * a button for leaving a review.
+ * @author Leonardo Formichetti
+ *
+ */
 public class GameProfileView extends ScreenViewSuper implements ScreenView {
 	private JLabel gameTitle;
 	private JButton reviewsBtn;
@@ -99,7 +104,7 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 		JButton back = new JButton("Indietro");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ScreenController.setPreviousScreen(screenName);
+				ScreenController.setPreviousScreen();
 			}
 		});
 		back.setBackground(Color.BLACK);
@@ -117,7 +122,10 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 		return card;
 	}
 
-	
+	/**
+	 * Populates the JTextFields in the ScreenView which hold the Game data.
+	 * @param game the game whose data has to be displayed
+	 */
 	public void populateFields(Game game){
 		gameTitle.setText(game.getGameTitle());
 		gameDescription.setText("<html><p>" + game.getDescription() + "</p></html>");

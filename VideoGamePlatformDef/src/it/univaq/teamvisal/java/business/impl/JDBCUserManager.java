@@ -15,11 +15,25 @@ import it.univaq.teamvisal.java.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Trophy;
 import it.univaq.teamvisal.java.business.model.User;
 
+/**
+ * DAO class which manages all the storage/retrieval of data related to User.
+ * @author Leonardo Formichetti
+ *
+ */
 public class JDBCUserManager extends JDBCManager {
 	
-	
+	/**
+	 * A reference to the user currently logged in the system, modeled as a User object.
+	 */
 	static private User currentUser;
 	
+	/**
+	 * Registers a new account, thus storing a new User in the database
+	 * @param user the User to be stored
+	 * @return true if the storage went successful, false otherwise
+	 * @throws SQLException
+	 * @throws DatabaseConnectionException
+	 */
 	static public boolean storeUser(User user) throws SQLException, DatabaseConnectionException {
 		Connection con = dbConnect();
 		
@@ -57,7 +71,16 @@ public class JDBCUserManager extends JDBCManager {
 		return true;
 		
 	}
-
+	
+	/**
+	 * The system tries to identify the user with the given username and password. If it
+	 * succedes, a User object is returned; otherwise, null is returned.
+	 * @param username the username entered by the user
+	 * @param password the password entered by the user
+	 * @return a reference to a User object or null
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	static public User doesUserExist(String username, String password) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
 		
@@ -124,16 +147,30 @@ public class JDBCUserManager extends JDBCManager {
 		return u;
 	}
 	
+	/**
+	 * Getter method for the current User object
+	 * @return a reference to the User currently logged in the system
+	 */
 	static public User getCurrentUser() {
 		return currentUser;
 	}
 
-	
+	/**
+	 * Setter method for the current User object
+	 * @param user the new currently active User
+	 */
 	static public void setCurrentUser(User user) {
 		currentUser = user;
 	}
 
-	
+	/**
+	 * Checks whether there is already a User with the username entered during registration
+	 * process
+	 * @param u an object incapsulating the information entered by the user
+	 * @return true if such a User exists, false otherwise
+	 * @throws SQLException
+	 * @throws DatabaseConnectionException
+	 */
 	static public boolean checkDoubleUsers(User u) throws SQLException, DatabaseConnectionException {
 		Connection con = dbConnect();
 		
@@ -159,13 +196,22 @@ public class JDBCUserManager extends JDBCManager {
 	
 
 	
-	
+	/**
+	 * Checks whether there's a User actually logged or not
+	 * @return true if a User is logged, false otherwise
+	 */
 	static public boolean isUserLogged(){
 		return currentUser != null;
 	}
 
 	
-	
+	/**
+	 * Sends a request to become a moderator in the Orion platform
+	 * @param pitch a brief description of why the player wants to be part of Orion
+	 * @return true if the storage went successfull; throws exceptions in all other cases
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static boolean sendModRequest(String pitch) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
 		
@@ -186,6 +232,12 @@ public class JDBCUserManager extends JDBCManager {
 		return true;
 	}
 	
+	/**
+	 * Lists all the pending requests for a Moderator to be approved or rejected
+	 * @return a TreeMap whose keys are usernames and values are their pitches
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static TreeMap<String, String> getModeratorRequests() throws DatabaseConnectionException, SQLException{
 		TreeMap<String, String> modRequests = new TreeMap<String, String>();
 		Connection con = dbConnect();
@@ -207,6 +259,13 @@ public class JDBCUserManager extends JDBCManager {
 		
 	}
 	
+	/**
+	 * Approves or rejects a request to become moderator based on the passed boolean value
+	 * @param username the username of the user who sent the request
+	 * @param approved true if the request should be approved, false otherwise
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static void manageRequest(String username, boolean approved) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
 		String sql = "delete from mod_request where mod_name = ?";
@@ -225,6 +284,13 @@ public class JDBCUserManager extends JDBCManager {
 		con.close();
 		statement.close();
 	}
+	
+	/**
+	 * Lists all the moderators currently enrolled in Orion
+	 * @return a List containing all the moderators in Orion
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static List<String> getModerators() throws DatabaseConnectionException, SQLException{
 		List<String> list = new LinkedList<String>();
 		
@@ -246,6 +312,12 @@ public class JDBCUserManager extends JDBCManager {
 		return list;
 	}
 	
+	/**
+	 * Demotes a user from moderator status to basic user status
+	 * @param username the username of the user to be demoted
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static void derankModerator(String username) throws DatabaseConnectionException, SQLException{
 		Connection con = dbConnect();
 		String sql = "update user set type = 'B' where username = ?";
@@ -257,6 +329,11 @@ public class JDBCUserManager extends JDBCManager {
 		con.close();
 	}
 	
+	/**
+	 * Attemps to syncronize the User's information from the platform with that of the Database
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static void syncDB() throws DatabaseConnectionException, SQLException {
 		User databaseUser = doesUserExist(currentUser.getUsername(), currentUser.getPassword());
 		Connection con = dbConnect();
@@ -380,6 +457,12 @@ public class JDBCUserManager extends JDBCManager {
 		con.close();
 	}
 	
+	/**
+	 * Updates the User information with the experience gained by a gameplay session
+	 * @param exp the amount of experience collected by the User
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	public static void updateUserExp(int exp) throws DatabaseConnectionException, SQLException{
 		currentUser.setExp(currentUser.getExp() + exp);
 		Calendar cal = Calendar.getInstance();
