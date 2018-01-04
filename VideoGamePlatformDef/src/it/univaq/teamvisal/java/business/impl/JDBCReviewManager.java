@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.business.model.Review;
 /**

@@ -4,13 +4,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
-import it.univaq.teamvisal.java.ScreenView;
-import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
 import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Message;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -159,7 +159,7 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 		card.add(back);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\repos\\Orion\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		

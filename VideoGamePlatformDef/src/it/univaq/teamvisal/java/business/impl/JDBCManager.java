@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 /**
  * Superclass of all the DAO classes which contains the first and most basic
  * of functionalities, used by any DAO: connecting to the database

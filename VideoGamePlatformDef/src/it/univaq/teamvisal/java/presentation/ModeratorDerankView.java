@@ -2,13 +2,13 @@ package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
-import it.univaq.teamvisal.java.ScreenView;
-import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
 import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Message;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
 
 import javax.swing.JLabel;
 import javax.swing.DefaultListModel;
@@ -104,7 +104,7 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 		card.add(derank);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\repos\\Orion\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		

@@ -2,9 +2,9 @@ package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.ScreenView;
-import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -83,7 +83,7 @@ public class ModeratorFunctionsView extends ScreenViewSuper implements ScreenVie
 		card.add(moderatorPanelLabel);
 		
 		JLabel background = new JLabel("");
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\repos\\Orion\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		

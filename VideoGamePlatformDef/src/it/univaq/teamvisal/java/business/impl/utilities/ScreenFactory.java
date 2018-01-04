@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java;
+package it.univaq.teamvisal.java.business.impl.utilities;
 
 import it.univaq.teamvisal.java.presentation.GameProfileView;
 import it.univaq.teamvisal.java.presentation.GameReviewView;
@@ -15,6 +15,7 @@ import it.univaq.teamvisal.java.presentation.UserProfileView;
 import it.univaq.teamvisal.java.presentation.UserRegistrationView;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
 import it.univaq.teamvisal.java.presentation.WriteReviewView;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 
 /**
  * Class which more or less adopts the Factory design pattern and whose functionality

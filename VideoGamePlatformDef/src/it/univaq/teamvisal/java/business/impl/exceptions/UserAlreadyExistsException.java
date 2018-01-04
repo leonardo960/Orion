@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java;
+package it.univaq.teamvisal.java.business.impl.exceptions;
 /**
  * Exception thrown when the application finds a User with the same username specified
  * during the registration process.

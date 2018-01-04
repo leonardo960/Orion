@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Trophy;
 import it.univaq.teamvisal.java.business.model.User;
 

@@ -2,8 +2,8 @@ package it.univaq.teamvisal.java.business.impl;
 
 import java.sql.SQLException;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
-import it.univaq.teamvisal.java.NoUserException;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.NoUserException;
 import it.univaq.teamvisal.java.business.model.User;
 
 /**

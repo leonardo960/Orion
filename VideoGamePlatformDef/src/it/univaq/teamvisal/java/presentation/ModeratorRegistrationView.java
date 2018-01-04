@@ -10,13 +10,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
-import it.univaq.teamvisal.java.DatabaseConnectionException;
-import it.univaq.teamvisal.java.DocumentSizeFilter;
-import it.univaq.teamvisal.java.ScreenView;
-import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.ModeratorRequestController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.presentation.utilities.DocumentSizeFilter;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
+
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.Font;
@@ -116,7 +116,7 @@ public class ModeratorRegistrationView extends ScreenViewSuper implements Screen
 		
 		JLabel background = new JLabel("");
 		background.setBounds(0, 0, 500, 500);
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\repos\\Orion\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBackground(Color.BLACK);
 		card.add(background);
 		

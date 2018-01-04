@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java;
+package it.univaq.teamvisal.java.business.impl.exceptions;
 
 /**
  * Exception thrown when the application cannot find a User with the specified

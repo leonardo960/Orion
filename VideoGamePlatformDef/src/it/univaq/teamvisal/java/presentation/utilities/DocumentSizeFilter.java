@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java;
+package it.univaq.teamvisal.java.presentation.utilities;
 
 import javax.swing.text.DocumentFilter;
 

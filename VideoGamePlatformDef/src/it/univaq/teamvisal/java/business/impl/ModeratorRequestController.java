@@ -2,7 +2,7 @@ package it.univaq.teamvisal.java.business.impl;
 
 import java.sql.SQLException;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 
 /**
  * Controller class that handles the call to the correct DAO class to handle

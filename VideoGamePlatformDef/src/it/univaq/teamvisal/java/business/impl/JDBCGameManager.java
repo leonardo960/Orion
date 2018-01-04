@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.business.model.Review;
 /**

@@ -11,10 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
-import it.univaq.teamvisal.java.ScreenFactory;
-import it.univaq.teamvisal.java.ScreenView;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.utilities.ScreenFactory;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 
 /**
  * Main "engine" of the system and most important Controller class in charge of managing

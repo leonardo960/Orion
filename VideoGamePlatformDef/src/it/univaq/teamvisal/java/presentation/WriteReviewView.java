@@ -2,15 +2,15 @@ package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.DatabaseConnectionException;
-import it.univaq.teamvisal.java.DocumentSizeFilter;
-import it.univaq.teamvisal.java.ScreenView;
-import it.univaq.teamvisal.java.ScreenViewSuper;
 import it.univaq.teamvisal.java.business.impl.JDBCReviewManager;
 import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.business.model.Review;
+import it.univaq.teamvisal.java.presentation.utilities.DocumentSizeFilter;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
+import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -160,7 +160,7 @@ public class WriteReviewView extends ScreenViewSuper implements ScreenView {
 		JLabel background = new JLabel("");
 		background.setFocusable(false);
 		background.setBackground(Color.BLACK);
-		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\bg.jpg"));
+		background.setIcon(new ImageIcon("C:\\Users\\Leonardo Formichetti\\repos\\Orion\\VideoGamePlatformDef\\bg.jpg"));
 		background.setBounds(0, 0, 500, 500);
 		card.add(background);
 		
