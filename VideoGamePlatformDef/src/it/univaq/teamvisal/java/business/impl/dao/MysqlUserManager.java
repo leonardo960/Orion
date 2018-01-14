@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java.business.impl;
+package it.univaq.teamvisal.java.business.impl.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Trophy;
 import it.univaq.teamvisal.java.business.model.User;
 
@@ -20,7 +21,7 @@ import it.univaq.teamvisal.java.business.model.User;
  * @author Leonardo Formichetti
  *
  */
-public class JDBCUserManager extends JDBCManager {
+public class MysqlUserManager extends MysqlManager implements JDBCUserManager {
 	
 	/**
 	 * A reference to the user currently logged in the system, modeled as a User object.
@@ -33,11 +34,12 @@ public class JDBCUserManager extends JDBCManager {
 	 * @return true if the storage went successful, false otherwise
 	 * @throws SQLException
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 */
-	static public boolean storeUser(User user) throws SQLException, DatabaseConnectionException {
+	public boolean storeUser(User user) throws DatabaseConnectionException, QueryException {
 		Connection con = dbConnect();
 		
-		
+		try{
 		String query = "INSERT INTO USER VALUES (?, ?, ?, ?, ?, ?, ?)";
 		
 		PreparedStatement ps = con.prepareStatement(query);
@@ -69,7 +71,9 @@ public class JDBCUserManager extends JDBCManager {
 		ps2.close();
 		
 		return true;
-		
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
@@ -79,11 +83,12 @@ public class JDBCUserManager extends JDBCManager {
 	 * @param password the password entered by the user
 	 * @return a reference to a User object or null
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	static public User doesUserExist(String username, String password) throws DatabaseConnectionException, SQLException{
+	public User doesUserExist(String username, String password) throws DatabaseConnectionException, QueryException{
 		Connection con = dbConnect();
-		
+		try{
 		Statement statement = con.createStatement();
 		
 		String query = "select * from user where username = " + "\"" + username + "\""
@@ -145,13 +150,16 @@ public class JDBCUserManager extends JDBCManager {
 		con.close();
 		
 		return u;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
 	 * Getter method for the current User object
 	 * @return a reference to the User currently logged in the system
 	 */
-	static public User getCurrentUser() {
+	public User getCurrentUser() {
 		return currentUser;
 	}
 
@@ -159,7 +167,7 @@ public class JDBCUserManager extends JDBCManager {
 	 * Setter method for the current User object
 	 * @param user the new currently active User
 	 */
-	static public void setCurrentUser(User user) {
+	public void setCurrentUser(User user) {
 		currentUser = user;
 	}
 
@@ -170,10 +178,11 @@ public class JDBCUserManager extends JDBCManager {
 	 * @return true if such a User exists, false otherwise
 	 * @throws SQLException
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 */
-	static public boolean checkDoubleUsers(User u) throws SQLException, DatabaseConnectionException {
+	public boolean checkDoubleUsers(User u) throws DatabaseConnectionException, QueryException {
 		Connection con = dbConnect();
-		
+		try{
 		Statement statement = con.createStatement();
 		String query = "select * from user where username = ";
 		query += "\"" + u.getUsername() + "\"" + ";";
@@ -189,7 +198,9 @@ public class JDBCUserManager extends JDBCManager {
 			con.close();
 			return false;
 		}
-			
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 
 
@@ -200,7 +211,7 @@ public class JDBCUserManager extends JDBCManager {
 	 * Checks whether there's a User actually logged or not
 	 * @return true if a User is logged, false otherwise
 	 */
-	static public boolean isUserLogged(){
+	public boolean isUserLogged(){
 		return currentUser != null;
 	}
 
@@ -210,11 +221,12 @@ public class JDBCUserManager extends JDBCManager {
 	 * @param pitch a brief description of why the player wants to be part of Orion
 	 * @return true if the storage went successfull; throws exceptions in all other cases
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static boolean sendModRequest(String pitch) throws DatabaseConnectionException, SQLException{
+	public boolean sendModRequest(String pitch) throws DatabaseConnectionException, QueryException{
 		Connection con = dbConnect();
-		
+		try{
 		String query = "INSERT INTO mod_request VALUES (?, ?)";
 		
 		PreparedStatement ps = con.prepareStatement(query);
@@ -230,6 +242,9 @@ public class JDBCUserManager extends JDBCManager {
 		currentUser.setRequestSent(true);
 	
 		return true;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
@@ -237,10 +252,12 @@ public class JDBCUserManager extends JDBCManager {
 	 * @return a TreeMap whose keys are usernames and values are their pitches
 	 * @throws DatabaseConnectionException
 	 * @throws SQLException
+	 * @throws QueryException 
 	 */
-	public static TreeMap<String, String> getModeratorRequests() throws DatabaseConnectionException, SQLException{
+	public TreeMap<String, String> getModeratorRequests() throws DatabaseConnectionException, QueryException{
 		TreeMap<String, String> modRequests = new TreeMap<String, String>();
 		Connection con = dbConnect();
+		try{
 		Statement statement = con.createStatement();
 		String query = "SELECT * FROM mod_request";
 		
@@ -256,7 +273,9 @@ public class JDBCUserManager extends JDBCManager {
 		statement.close();
 		
 		return modRequests;
-		
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
@@ -264,10 +283,12 @@ public class JDBCUserManager extends JDBCManager {
 	 * @param username the username of the user who sent the request
 	 * @param approved true if the request should be approved, false otherwise
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static void manageRequest(String username, boolean approved) throws DatabaseConnectionException, SQLException{
+	public void manageRequest(String username, boolean approved) throws DatabaseConnectionException, QueryException{
 		Connection con = dbConnect();
+		try{
 		String sql = "delete from mod_request where mod_name = ?";
 		PreparedStatement statement = con.prepareStatement(sql);
 		statement.setString(1, username);
@@ -283,18 +304,23 @@ public class JDBCUserManager extends JDBCManager {
 		
 		con.close();
 		statement.close();
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
 	 * Lists all the moderators currently enrolled in Orion
 	 * @return a List containing all the moderators in Orion
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static List<String> getModerators() throws DatabaseConnectionException, SQLException{
+	public List<String> getModerators() throws DatabaseConnectionException, QueryException{
 		List<String> list = new LinkedList<String>();
 		
 		Connection con = dbConnect();
+		try{
 		String sql = "select * from user where type = 'M'";
 		Statement statement = con.createStatement();
 		
@@ -310,16 +336,21 @@ public class JDBCUserManager extends JDBCManager {
 		
 		
 		return list;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
 	 * Demotes a user from moderator status to basic user status
 	 * @param username the username of the user to be demoted
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static void derankModerator(String username) throws DatabaseConnectionException, SQLException{
+	public void derankModerator(String username) throws DatabaseConnectionException, QueryException{
 		Connection con = dbConnect();
+		try{
 		String sql = "update user set type = 'B' where username = ?";
 		PreparedStatement statement = con.prepareStatement(sql);
 		statement.setString(1, username);
@@ -327,14 +358,19 @@ public class JDBCUserManager extends JDBCManager {
 		
 		statement.close();
 		con.close();
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
 	 * Attemps to syncronize the User's information from the platform with that of the Database
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static void syncDB() throws DatabaseConnectionException, SQLException {
+	public void syncDB() throws DatabaseConnectionException, QueryException {
+		try{
 		User databaseUser = doesUserExist(currentUser.getUsername(), currentUser.getPassword());
 		Connection con = dbConnect();
 		
@@ -455,15 +491,19 @@ public class JDBCUserManager extends JDBCManager {
 		}
 		
 		con.close();
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
 	 * Updates the User information with the experience gained by a gameplay session
 	 * @param exp the amount of experience collected by the User
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static void updateUserExp(int exp) throws DatabaseConnectionException, SQLException{
+	public void updateUserExp(int exp) throws DatabaseConnectionException, QueryException{
 		currentUser.setExp(currentUser.getExp() + exp);
 		Calendar cal = Calendar.getInstance();
 		Date currentDate = new Date(cal.getTimeInMillis());

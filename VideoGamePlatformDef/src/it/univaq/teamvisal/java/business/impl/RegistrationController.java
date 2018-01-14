@@ -2,7 +2,9 @@ package it.univaq.teamvisal.java.business.impl;
 
 import java.sql.SQLException;
 
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.impl.exceptions.UserAlreadyExistsException;
 import it.univaq.teamvisal.java.business.model.User;
 
@@ -25,11 +27,12 @@ public class RegistrationController {
 	 * @throws SQLException
 	 * @throws UserAlreadyExistsException
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 */
-	public boolean register(String user, String pass, String name, String surname) throws SQLException, UserAlreadyExistsException, DatabaseConnectionException{
+	public boolean register(String user, String pass, String name, String surname) throws UserAlreadyExistsException, DatabaseConnectionException, QueryException{
 		User u = new User(user, pass, name, surname);
-		if(!JDBCUserManager.checkDoubleUsers(u)){
-		return JDBCUserManager.storeUser(u);
+		if(! MysqlDAOFactory.getInstance().getMysqlUserManager().checkDoubleUsers(u)){
+		return  MysqlDAOFactory.getInstance().getMysqlUserManager().storeUser(u);
 		}else{
 		throw new UserAlreadyExistsException();
 		}

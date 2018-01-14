@@ -2,10 +2,10 @@ package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.business.impl.JDBCReviewManager;
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.business.model.Review;
 import it.univaq.teamvisal.java.presentation.utilities.DocumentSizeFilter;
@@ -26,7 +26,6 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 /**
@@ -195,14 +194,14 @@ public class WriteReviewView extends ScreenViewSuper implements ScreenView {
 					vote = 5;
 				}
 				try {
-					JDBCReviewManager.sendReview(new Review(JDBCUserManager.getCurrentUser().getUsername(), chosenGame.getGameTitle(), vote, txtrScriviLaTua.getText()));
+					MysqlDAOFactory.getInstance().getMysqlReviewManager().sendReview(new Review(MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername(), chosenGame.getGameTitle(), vote, txtrScriviLaTua.getText()));
 					JOptionPane.showMessageDialog(card, "Recensione inviata correttamente! Verrà sottoposta ad analisi e poi eventualmente pubblicata. Riceverai un messaggio di conferma.");
 					ScreenController.setPreviousScreen();
 					((GameReviewView) ScreenController.getLoadedScreens().get("GAMEREVIEWSCREEN")).checkSendButtonVisibility();
-				} catch (DatabaseConnectionException | SQLException e) {
+				} catch (DatabaseConnectionException | QueryException e) {
 					if(e instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile inviare la recensione: database offline.");
-					}else if(e instanceof SQLException){
+					}else if(e instanceof QueryException){
 						JOptionPane.showMessageDialog(card, "Impossibile inviare la recensione: problemi con il database.");
 					}
 					

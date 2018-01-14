@@ -1,9 +1,8 @@
-package it.univaq.teamvisal.java.business.impl;
+package it.univaq.teamvisal.java.business.impl.dao;
 
 
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,14 +10,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Game;
-import it.univaq.teamvisal.java.business.model.Review;
 /**
  * DAO class which handles the storage of all information related to Games.
  * @author Leonardo Formichetti
  *
  */
-public class JDBCGameManager extends JDBCManager {
+public class MysqlGameManager extends MysqlManager implements JDBCGameManager {
 
 	
 	/**
@@ -27,12 +26,13 @@ public class JDBCGameManager extends JDBCManager {
 	 * @param selectedGameTitle the game's name
 	 * @return an object incapsulating all info related to the game
 	 * @throws DatabaseConnectionException
-	 * @throws SQLException
+	 * @throws QueryException 
 	 */
-	public static Game doesGameExist(String selectedGameTitle) throws DatabaseConnectionException, SQLException {
+	public Game doesGameExist(String selectedGameTitle) throws DatabaseConnectionException, QueryException {
 		
 		Connection con = dbConnect();
 		
+		try{
 		Statement statement = con.createStatement();
 		
 		String gameQuery = "select * from game where gamename = \"" + selectedGameTitle + "\"";
@@ -52,8 +52,11 @@ public class JDBCGameManager extends JDBCManager {
 		con.close();
 		statement.close();
 		rs.close();
-
+		
 		return g;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	
@@ -61,13 +64,13 @@ public class JDBCGameManager extends JDBCManager {
 	 * Returns a List with all the games currently implemented inside Orion.
 	 * @return the List containing the games
 	 * @throws DatabaseConnectionException
-	 * @throws SQLException
+	 * @throws QueryException 
 	 */
-	static public List<Game> listGames() throws DatabaseConnectionException, SQLException{ 
+   public List<Game> listGames() throws DatabaseConnectionException, QueryException { 
 		List<Game> games = new LinkedList<Game>();
 		
 		Connection con = dbConnect();
-		
+		try{
 		Statement statement = con.createStatement();
 		
 		String query = "select * from game";
@@ -83,6 +86,9 @@ public class JDBCGameManager extends JDBCManager {
 		rs.close();
 		
 		return games;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 }

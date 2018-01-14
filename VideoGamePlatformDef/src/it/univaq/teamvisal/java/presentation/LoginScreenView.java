@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 
 import javax.swing.JButton;
@@ -13,11 +12,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.LoginController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.impl.exceptions.NoUserException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
 
@@ -113,7 +113,7 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 		
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(   !usernameField.getText().contains(" ")
+				if(!usernameField.getText().contains(" ")
 				   && usernameField.getText().length() > 0 
 				   && !String.copyValueOf(passwordField.getPassword()).contains(" ")
 				   && passwordField.getPassword().length > 0){
@@ -121,9 +121,9 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 						loginController.login(usernameField.getText(), String.copyValueOf(passwordField.getPassword()));
 						ScreenController.setScreen("USERHOMEPAGESCREEN");
 						((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateUser();
-						if(JDBCUserManager.getCurrentUser().getType().equals("B")){
+						if(MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getType().equals("B")){
 							((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setModeratorFunctionsButton(false);
-							if(JDBCUserManager.getCurrentUser().isRequestSent()){
+							if(MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().isRequestSent()){
 								((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setRequestButton(false);
 							}else{
 								((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).setRequestButton(true);
@@ -134,12 +134,12 @@ public class LoginScreenView extends ScreenViewSuper implements ScreenView {
 						}
 						((UserHomepageView) ScreenController.getLoadedScreens().get("USERHOMEPAGESCREEN")).updateMessages();
 						
-					} catch (DatabaseConnectionException | SQLException | NoUserException e) {
+					} catch (DatabaseConnectionException | QueryException | NoUserException e) {
 						if(e instanceof DatabaseConnectionException){
 							JOptionPane.showMessageDialog(card, "Login fallito: problemi con il database.");
 							clearTextFields();
 							ScreenController.setPreviousScreen();
-						}else if(e instanceof SQLException){
+						}else if(e instanceof QueryException){
 							JOptionPane.showMessageDialog(card, "Login fallito: problemi con il database.");
 							clearTextFields();
 							ScreenController.setPreviousScreen();

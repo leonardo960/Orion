@@ -1,8 +1,9 @@
 package it.univaq.teamvisal.java.business.impl;
 
-import java.sql.SQLException;
 
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 
 /**
  * Controller class which manages the logic of the logout process
@@ -16,14 +17,14 @@ public class LogoutController {
 	 * attempting to syncronize the information coming from the platform with that of the
 	 * database
 	 * @throws DatabaseConnectionException
-	 * @throws SQLException
+	 * @throws QueryException 
 	 */
-	public void logout() throws DatabaseConnectionException, SQLException{
-		if(JDBCUserManager.getCurrentUser() == null){
+	public void logout() throws DatabaseConnectionException, QueryException{
+		if( MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser() == null){
 			return;
 		}else{
-			JDBCUserManager.syncDB();
-			JDBCUserManager.setCurrentUser(null);
+			 MysqlDAOFactory.getInstance().getMysqlUserManager().syncDB();
+			 MysqlDAOFactory.getInstance().getMysqlUserManager().setCurrentUser(null);
 		}
 	}
 }

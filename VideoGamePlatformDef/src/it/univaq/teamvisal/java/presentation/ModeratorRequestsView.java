@@ -4,10 +4,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Message;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
@@ -24,7 +24,6 @@ import javax.swing.UIManager;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.TreeMap;
 
 import javax.swing.DefaultListModel;
@@ -92,16 +91,16 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima l'utente nella lista.");
 			}else{
 				try {
-					JDBCUserManager.manageRequest(list.getSelectedValue(), true);
+					MysqlDAOFactory.getInstance().getMysqlUserManager().manageRequest(list.getSelectedValue(), true);
 					
 					JOptionPane.showMessageDialog(card, "Richiesta approvata con successo.");
-					JDBCMessageManager.postMessage(new Message("Complimenti, la tua richiesta per diventare Moderatore è stata approvata! Da oggi in poi avrai accesso al Pannello Moderatore, dove potrai gestire l'utenza e moderare le recensioni. Benvenuto a bordo, e buon lavoro!", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), list.getSelectedValue()));
+					MysqlDAOFactory.getInstance().getMysqlMessageManager().postMessage(new Message("Complimenti, la tua richiesta per diventare Moderatore è stata approvata! Da oggi in poi avrai accesso al Pannello Moderatore, dove potrai gestire l'utenza e moderare le recensioni. Benvenuto a bordo, e buon lavoro!", "Moderatore: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername(), list.getSelectedValue()));
 					model.remove(list.getSelectedIndex());
-				} catch (DatabaseConnectionException | SQLException e1) {
+				} catch (DatabaseConnectionException | QueryException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: database offline.");
 						ScreenController.setPreviousScreen();
-					}else if(e1 instanceof SQLException){
+					}else if(e1 instanceof QueryException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: problemi con il database.");
 						ScreenController.setPreviousScreen();
 						}
@@ -123,14 +122,14 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima l'utente nella lista.");
 			}else{
 				try {
-					JDBCUserManager.manageRequest(list.getSelectedValue(), false);
+					MysqlDAOFactory.getInstance().getMysqlUserManager().manageRequest(list.getSelectedValue(), false);
 					model.remove(list.getSelectedIndex());
 					JOptionPane.showMessageDialog(card, "Richiesta respinta con successo.");
-				} catch (DatabaseConnectionException | SQLException e1) {
+				} catch (DatabaseConnectionException | QueryException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: database offline.");
 						ScreenController.setPreviousScreen();
-					}else if(e1 instanceof SQLException){
+					}else if(e1 instanceof QueryException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: problemi con il database.");
 						ScreenController.setPreviousScreen();
 						}
@@ -173,17 +172,17 @@ public class ModeratorRequestsView extends ScreenViewSuper implements ScreenView
 	 */
 	public void populateList(){
 		try {
-			modRequests = JDBCUserManager.getModeratorRequests();
+			modRequests = MysqlDAOFactory.getInstance().getMysqlUserManager().getModeratorRequests();
 			model = new DefaultListModel<String>();
 			for(String s : modRequests.keySet()){
 				model.addElement(s);
 			}
 			list.setModel(model);
-		} catch (DatabaseConnectionException | SQLException e) {
+		} catch (DatabaseConnectionException | QueryException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le richieste moderatore: database offline.");
 				ScreenController.setPreviousScreen();
-			}else if(e instanceof SQLException){
+			}else if(e instanceof QueryException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le richieste moderatore: problemi con il database.");
 				ScreenController.setPreviousScreen();
 			}

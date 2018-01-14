@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.Arrays;
 
 
@@ -14,10 +13,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
 import it.univaq.teamvisal.java.business.impl.RegistrationController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.impl.exceptions.UserAlreadyExistsException;
 import it.univaq.teamvisal.java.business.model.Message;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
@@ -160,11 +160,11 @@ public class UserRegistrationView extends ScreenViewSuper implements ScreenView 
 					try {
 						if(registrationController.register(username.getText(), String.copyValueOf(password.getPassword()), name.getText(), surname.getText())){
 							JOptionPane.showMessageDialog(card, "Registrazione avvenuta con successo!");
-							JDBCMessageManager.postMessage(new Message("Benvenuto su Orion! Messaggi come questo verrano usati per comunicarti ogni sorta di notifica. Buon Divertimento!", "Sistema", username.getText()));
+							MysqlDAOFactory.getInstance().getMysqlMessageManager().postMessage(new Message("Benvenuto su Orion! Messaggi come questo verrano usati per comunicarti ogni sorta di notifica. Buon Divertimento!", "Sistema", username.getText()));
 							clearTextFields();
 							ScreenController.setPreviousScreen();
-					}} catch (HeadlessException | SQLException | UserAlreadyExistsException | DatabaseConnectionException e) {
-						if(e instanceof SQLException){
+					}} catch (HeadlessException | QueryException | UserAlreadyExistsException | DatabaseConnectionException e) {
+						if(e instanceof QueryException){
 							JOptionPane.showMessageDialog(card, "Registrazione fallita: problemi con il database.");
 							clearTextFields();
 							ScreenController.setPreviousScreen();

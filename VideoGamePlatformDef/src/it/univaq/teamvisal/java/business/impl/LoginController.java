@@ -1,9 +1,10 @@
 package it.univaq.teamvisal.java.business.impl;
 
-import java.sql.SQLException;
 
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
 import it.univaq.teamvisal.java.business.impl.exceptions.NoUserException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.User;
 
 /**
@@ -19,15 +20,15 @@ public class LoginController {
 	 * @param user the specified username
 	 * @param pass the specified password
 	 * @throws DatabaseConnectionException
-	 * @throws SQLException
 	 * @throws NoUserException
+	 * @throws QueryException 
 	 */
-	public void login(String user, String pass) throws DatabaseConnectionException, SQLException, NoUserException{
-		User u = JDBCUserManager.doesUserExist(user, pass);
+	public void login(String user, String pass) throws DatabaseConnectionException, NoUserException, QueryException{
+		User u = MysqlDAOFactory.getInstance().getMysqlUserManager().doesUserExist(user, pass);
 		if(u == null){
 			throw new NoUserException();
 		}else{
-			JDBCUserManager.setCurrentUser(u);
+			 MysqlDAOFactory.getInstance().getMysqlUserManager().setCurrentUser(u);
 		}
 	}
 }

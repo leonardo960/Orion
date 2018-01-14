@@ -2,8 +2,8 @@ package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.model.Trophy;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
@@ -37,31 +37,31 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 	public JPanel initialize() {
 		card.setLayout(null);
 		
-		username = new JLabel("Username: " + JDBCUserManager.getCurrentUser().getUsername());
+		username = new JLabel("Username: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername());
 		username.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		username.setForeground(Color.WHITE);
 		username.setBounds(78, 92, 246, 14);
 		card.add(username);
 		
-		name = new JLabel("Nome: " + JDBCUserManager.getCurrentUser().getNome());
+		name = new JLabel("Nome: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getNome());
 		name.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		name.setForeground(Color.WHITE);
 		name.setBounds(78, 117, 246, 14);
 		card.add(name);
 		
-		surname = new JLabel("Cognome: " + JDBCUserManager.getCurrentUser().getCognome());
+		surname = new JLabel("Cognome: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getCognome());
 		surname.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		surname.setForeground(Color.WHITE);
 		surname.setBounds(78, 142, 246, 14);
 		card.add(surname);
 		
-		exp = new JLabel("Exp: " + JDBCUserManager.getCurrentUser().getExp());
+		exp = new JLabel("Exp: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getExp());
 		exp.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		exp.setForeground(Color.WHITE);
 		exp.setBounds(78, 167, 246, 14);
 		card.add(exp);
 		
-		level = new JLabel("Livello: " + JDBCUserManager.getCurrentUser().getLevel());
+		level = new JLabel("Livello: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getLevel());
 		level.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
 		level.setForeground(Color.WHITE);
 		level.setBounds(78, 192, 246, 18);
@@ -80,7 +80,7 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 		back.setBounds(10, 419, 124, 36);
 		card.add(back);
 		
-		JLabel trofeo1 = new JLabel("Trofeo di Benvenuto - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo di Benvenuto")));
+		JLabel trofeo1 = new JLabel("Trofeo di Benvenuto - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo di Benvenuto")));
 		trofeo1.setBackground(Color.BLACK);
 		trofeo1.setForeground(Color.WHITE);
 		trofeo1.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 15));
@@ -146,7 +146,7 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 	 * retrieving them thanks to the User DAO
 	 */
 	public void setTrophyDates(){
-		switch(JDBCUserManager.getCurrentUser().getTrophies().size()){
+		switch(MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().size()){
 		case 1:
 			trofeo2.setText("Trofeo Lira - Non acquisito");
 			trofeo3.setText("Trofeo Bilancia - Non acquisito");
@@ -154,28 +154,28 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 2:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
 			trofeo3.setText("Trofeo Bilancia - Non acquisito");
 			trofeo4.setText("Trofeo Paradiso - Non acquisito");
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 3:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
-			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
+			trofeo3.setText("Trofeo Bilancia - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
 			trofeo4.setText("Trofeo Paradiso - Non acquisito");
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 4:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
-			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
-			trofeo4.setText("Trofeo Paradiso - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Paradiso")));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
+			trofeo3.setText("Trofeo Bilancia - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
+			trofeo4.setText("Trofeo Paradiso - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Paradiso")));
 			trofeo5.setText("Trofeo Orion - Non acquisito");
 			break;
 		case 5:
-			trofeo2.setText("Trofeo Lira - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
-			trofeo3.setText("Trofeo Bilancia - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
-			trofeo4.setText("Trofeo Paradiso - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Paradiso")));
-			trofeo5.setText("Trofeo Orion - Acquisito il " + JDBCUserManager.getCurrentUser().getTrophies().get(new Trophy("Trofeo Orion")));
+			trofeo2.setText("Trofeo Lira - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Lira")));
+			trofeo3.setText("Trofeo Bilancia - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Bilancia")));
+			trofeo4.setText("Trofeo Paradiso - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Paradiso")));
+			trofeo5.setText("Trofeo Orion - Acquisito il " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getTrophies().get(new Trophy("Trofeo Orion")));
 			break;
 		default:
 			break;
@@ -187,11 +187,11 @@ public class UserProfileView extends ScreenViewSuper implements ScreenView  {
 	 * User DAO
 	 */
 	public void setProfileInformation(){
-		username.setText("Username: " + JDBCUserManager.getCurrentUser().getUsername());
-		name.setText("Nome: " + JDBCUserManager.getCurrentUser().getNome());
-		surname.setText("Cognome: " + JDBCUserManager.getCurrentUser().getCognome());
-		exp.setText("Exp: " + JDBCUserManager.getCurrentUser().getExp());
-		level.setText("Livello: " + JDBCUserManager.getCurrentUser().getLevel());
+		username.setText("Username: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername());
+		name.setText("Nome: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getNome());
+		surname.setText("Cognome: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getCognome());
+		exp.setText("Exp: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getExp());
+		level.setText("Livello: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getLevel());
 	}
 	
 

@@ -3,8 +3,6 @@ package it.univaq.teamvisal.java.business.model;
 
 
 import java.sql.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeMap;
 
 /**

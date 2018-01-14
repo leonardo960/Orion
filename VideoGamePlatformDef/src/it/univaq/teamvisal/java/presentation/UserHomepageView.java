@@ -4,11 +4,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.LogoutController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Message;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
@@ -25,7 +25,6 @@ import javax.swing.UIManager;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
@@ -55,7 +54,7 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 	public JPanel initialize() {
 		card.setLayout(null);
 		
-		welcomeLabel = new JLabel("Benvenuto " + JDBCUserManager.getCurrentUser().getUsername() + "!");
+		welcomeLabel = new JLabel("Benvenuto " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername() + "!");
 		welcomeLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 20));
 		welcomeLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		welcomeLabel.setForeground(Color.WHITE);
@@ -112,10 +111,10 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 					logoutController.logout();
 					((LoginScreenView) ScreenController.getLoadedScreens().get("LOGINSCREEN")).clearTextFields();
 					
-				} catch (DatabaseConnectionException | SQLException e1) {
+				} catch (DatabaseConnectionException | QueryException e1) {
 					if(JOptionPane.showConfirmDialog(card, "Procedura di logout fallita: database offline.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
 						System.exit(0);
-					}else if(e1 instanceof SQLException){
+					}else if(e1 instanceof QueryException){
 						if(JOptionPane.showConfirmDialog(card, "Procedura di logout fallita a causa di problemi con il database.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
 							System.exit(0);
 						}
@@ -187,7 +186,7 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 	 * Updates the welcome message with the appropriate currentUser name
 	 */
 	public void updateUser(){
-		welcomeLabel.setText("Benvenuto " + JDBCUserManager.getCurrentUser().getUsername());
+		welcomeLabel.setText("Benvenuto " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername());
 	}
 	
 	/**
@@ -195,12 +194,12 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
 	 */
 	public void updateMessages(){
 		try {
-			messages = JDBCMessageManager.checkForMessages();
+			messages = MysqlDAOFactory.getInstance().getMysqlMessageManager().checkForMessages();
 			checkForMessages.setText("Messaggi" + "(" + messages.size() + ")");
-		} catch (DatabaseConnectionException | SQLException e) {
+		} catch (DatabaseConnectionException | QueryException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare i messaggi: database offline.");
-			}else if(e instanceof SQLException){
+			}else if(e instanceof QueryException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare i messaggi: problemi con il database.");
 			}
 		}
@@ -222,12 +221,12 @@ public class UserHomepageView extends ScreenViewSuper implements ScreenView {
         	UIManager.put("OptionPane.minimumSize", new Dimension(550,50));
         	
         	try {
-				JDBCMessageManager.deleteMessage(message.getID());
-			} catch (DatabaseConnectionException | SQLException e) {
+        		 MysqlDAOFactory.getInstance().getMysqlMessageManager().deleteMessage(message.getID());
+			} catch (DatabaseConnectionException | QueryException e) {
 				if(e instanceof DatabaseConnectionException){
 					JOptionPane.showMessageDialog(card, "Impossibile portare a termina la procedura di visualizzazione del messaggio: database offline.");
 					return;
-				}else if(e instanceof SQLException){
+				}else if(e instanceof QueryException){
 					JOptionPane.showMessageDialog(card, "Impossibile portare a termina la procedura di visualizzazione del messaggio: problemi con il database.");
 					return;
 				}

@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java.business.impl;
+package it.univaq.teamvisal.java.business.impl.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +11,7 @@ import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionExcep
  * @author Leonardo Formichetti
  *
  */
-public class JDBCManager {
+public class MysqlManager {
 	/**
 	 * Attemps to enstablish a connection with the database
 	 * @return a Connection object which holds all data pertaining the enstablished connection

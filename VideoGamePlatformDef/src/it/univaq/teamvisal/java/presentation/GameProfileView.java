@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import it.univaq.teamvisal.java.business.impl.GameplayController;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
@@ -18,7 +19,6 @@ import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 /**
  * ScreenView for the Game Profile Screen. There's a brief description of the Game and
@@ -65,14 +65,14 @@ public class GameProfileView extends ScreenViewSuper implements ScreenView {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					gameplayController.playGame(displayedGame);
-				} catch(IOException | InterruptedException | DatabaseConnectionException | SQLException e1){
+				} catch(IOException | InterruptedException | DatabaseConnectionException | QueryException e1){
 					if(e1 instanceof IOException){
 						JOptionPane.showMessageDialog(card, "Errore di I/O nell'aprire il gioco", "Errore", JOptionPane.ERROR_MESSAGE);
 					}else if(e1 instanceof InterruptedException){
 						JOptionPane.showMessageDialog(card, "L'applicazione è ripartita senza aspettare il gioco", "Errore", JOptionPane.ERROR_MESSAGE);
 					}else if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Errore nella sincronizzazione con il database: database offline.", "Errore", JOptionPane.ERROR_MESSAGE);
-					}else if(e1 instanceof SQLException){
+					}else if(e1 instanceof QueryException){
 						JOptionPane.showMessageDialog(card, "Errore nella sincronizzazione con il database: problemi con il database.", "Errore", JOptionPane.ERROR_MESSAGE);
 					}
 				}

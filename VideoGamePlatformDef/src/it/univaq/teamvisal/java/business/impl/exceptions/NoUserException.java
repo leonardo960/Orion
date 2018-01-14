@@ -8,4 +8,9 @@ package it.univaq.teamvisal.java.business.impl.exceptions;
  */
 public class NoUserException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 }

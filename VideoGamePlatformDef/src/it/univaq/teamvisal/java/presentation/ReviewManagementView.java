@@ -4,11 +4,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
-import it.univaq.teamvisal.java.business.impl.JDBCReviewManager;
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Message;
 import it.univaq.teamvisal.java.business.model.Review;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
@@ -18,9 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.TreeMap;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -81,15 +78,15 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima la recensione nella lista.");
 			}else{
 				try {
-					JDBCReviewManager.manageReview(getReviewFromList(list.getSelectedValue()), true);
+					MysqlDAOFactory.getInstance().getMysqlReviewManager().manageReview(getReviewFromList(list.getSelectedValue()), true);
 					JOptionPane.showMessageDialog(card, "Recensione approvata con successo.");
-					JDBCMessageManager.postMessage(new Message("La recensione che avevi scritto per " + getReviewFromList(list.getSelectedValue()).getGamename() + " è stata approvata!", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), getReviewFromList(list.getSelectedValue()).getUsername()));
+					MysqlDAOFactory.getInstance().getMysqlMessageManager().postMessage(new Message("La recensione che avevi scritto per " + getReviewFromList(list.getSelectedValue()).getGamename() + " è stata approvata!", "Moderatore: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername(), getReviewFromList(list.getSelectedValue()).getUsername()));
 					model.remove(list.getSelectedIndex());
-				} catch (DatabaseConnectionException | SQLException e1) {
+				} catch (DatabaseConnectionException | QueryException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: database offline.");
 						ScreenController.setPreviousScreen();
-					}else if(e1 instanceof SQLException){
+					}else if(e1 instanceof QueryException){
 						JOptionPane.showMessageDialog(card, "Impossibile approvare la richiesta: problemi con il database.");
 						ScreenController.setPreviousScreen();
 						}
@@ -111,15 +108,15 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima la recensione nella lista.");
 			}else{
 				try {
-					JDBCReviewManager.manageReview(getReviewFromList(list.getSelectedValue()), false);
+					MysqlDAOFactory.getInstance().getMysqlReviewManager().manageReview(getReviewFromList(list.getSelectedValue()), false);
 					JOptionPane.showMessageDialog(card, "Recensione respinta con successo.");
-					JDBCMessageManager.postMessage(new Message("La recensione che avevi scritto per " + getReviewFromList(list.getSelectedValue()).getGamename() + " è stata respinta. Attieniti più alle linee guida in futuro.", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), getReviewFromList(list.getSelectedValue()).getUsername()));
+					MysqlDAOFactory.getInstance().getMysqlMessageManager().postMessage(new Message("La recensione che avevi scritto per " + getReviewFromList(list.getSelectedValue()).getGamename() + " è stata respinta. Attieniti più alle linee guida in futuro.", "Moderatore: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername(), getReviewFromList(list.getSelectedValue()).getUsername()));
 					model.remove(list.getSelectedIndex());
-				} catch (DatabaseConnectionException | SQLException e1) {
+				} catch (DatabaseConnectionException | QueryException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: database offline.");
 						ScreenController.setPreviousScreen();
-					}else if(e1 instanceof SQLException){
+					}else if(e1 instanceof QueryException){
 						JOptionPane.showMessageDialog(card, "Impossibile respingere la richiesta: problemi con il database.");
 						ScreenController.setPreviousScreen();
 						}
@@ -178,7 +175,7 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 	 */
 	public void populateList(){
 		try {
-			reviews = JDBCReviewManager.getPendingReviews();
+			reviews = MysqlDAOFactory.getInstance().getMysqlReviewManager().getPendingReviews();
 			model = new DefaultListModel<String>();
 			for(Review r : reviews){
 				String row;
@@ -186,11 +183,11 @@ public class ReviewManagementView extends ScreenViewSuper implements ScreenView 
 				model.addElement(row);
 			}
 			list.setModel(model);
-		} catch (DatabaseConnectionException | SQLException e) {
+		} catch (DatabaseConnectionException | QueryException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensione in esame: database offline.");
 				ScreenController.setPreviousScreen();
-			}else if(e instanceof SQLException){
+			}else if(e instanceof QueryException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensioni in esame: problemi con il database.");
 				ScreenController.setPreviousScreen();
 			}

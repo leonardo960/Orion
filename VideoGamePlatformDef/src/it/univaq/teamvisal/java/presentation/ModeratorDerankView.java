@@ -2,10 +2,10 @@ package it.univaq.teamvisal.java.presentation;
 
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.business.impl.JDBCMessageManager;
-import it.univaq.teamvisal.java.business.impl.JDBCUserManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Message;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
@@ -21,7 +21,6 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
@@ -82,14 +81,14 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 					JOptionPane.showMessageDialog(card, "Per favore, seleziona prima l'utente nella lista.");
 				}else{
 					try {
-						JDBCUserManager.derankModerator(list.getSelectedValue().substring(0, list.getSelectedValue().indexOf(" ")));
+						MysqlDAOFactory.getInstance().getMysqlUserManager().derankModerator(list.getSelectedValue().substring(0, list.getSelectedValue().indexOf(" ")));
 						JOptionPane.showMessageDialog(card, "L'utente selezionato è stato degradato correttamente.");
-						JDBCMessageManager.postMessage(new Message("Siamo spiacenti di comunicarti che ti è stato revocato lo status di Moderatore. Potrai fare richiesta per essere riammesso, se lo desideri.", "Moderatore: " + JDBCUserManager.getCurrentUser().getUsername(), list.getSelectedValue().substring(0, list.getSelectedValue().indexOf(" "))));
+						MysqlDAOFactory.getInstance().getMysqlMessageManager().postMessage(new Message("Siamo spiacenti di comunicarti che ti è stato revocato lo status di Moderatore. Potrai fare richiesta per essere riammesso, se lo desideri.", "Moderatore: " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername(), list.getSelectedValue().substring(0, list.getSelectedValue().indexOf(" "))));
 						model.remove(list.getSelectedIndex());
-					} catch (DatabaseConnectionException | SQLException e1) {
+					} catch (DatabaseConnectionException | QueryException e1) {
 						if(e1 instanceof DatabaseConnectionException){
 							JOptionPane.showMessageDialog(card, "Impossibile degradare il moderatore selezionato: database offline.");
-						}else if(e1 instanceof SQLException){
+						}else if(e1 instanceof QueryException){
 							JOptionPane.showMessageDialog(card, "Impossibile degradare il moderatore selezionato: problemi con il database.");
 						}
 					}
@@ -118,18 +117,18 @@ public class ModeratorDerankView extends ScreenViewSuper implements ScreenView {
 	 */
 	public void populateList(){
 		try {
-			List<String> stringList = JDBCUserManager.getModerators();
-			stringList.remove(JDBCUserManager.getCurrentUser().getUsername() + " - " + JDBCUserManager.getCurrentUser().getNome() + " " + JDBCUserManager.getCurrentUser().getCognome());
+			List<String> stringList = MysqlDAOFactory.getInstance().getMysqlUserManager().getModerators();
+			stringList.remove(MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername() + " - " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getNome() + " " + MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getCognome());
 			model = new DefaultListModel<String>();
 			for(String s : stringList){
 				model.addElement(s);
 			}
 			list.setModel(model);
-		} catch (DatabaseConnectionException | SQLException e) {
+		} catch (DatabaseConnectionException | QueryException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare la lista dei moderatori: database offline.");
 				ScreenController.setPreviousScreen();
-			}else if(e instanceof SQLException){
+			}else if(e instanceof QueryException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare la lista dei moderatori: problemi con il database.");
 				ScreenController.setPreviousScreen();
 			}

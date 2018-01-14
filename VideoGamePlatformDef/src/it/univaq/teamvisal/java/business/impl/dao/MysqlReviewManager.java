@@ -1,4 +1,4 @@
-package it.univaq.teamvisal.java.business.impl;
+package it.univaq.teamvisal.java.business.impl.dao;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.business.model.Review;
 /**
@@ -16,19 +17,20 @@ import it.univaq.teamvisal.java.business.model.Review;
  * @author Leonardo Formichetti
  *
  */
-public class JDBCReviewManager extends JDBCManager {
+public class MysqlReviewManager extends MysqlManager implements JDBCReviewManager {
 
 	/**
 	 * Approves or rejects a Review based on the passed boolean value
 	 * @param review the Review to be handled
 	 * @param approved whether we are accepting or rejecting the Review
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static void manageReview(Review review, boolean approved) throws DatabaseConnectionException, SQLException{
+	public void manageReview(Review review, boolean approved) throws DatabaseConnectionException, QueryException{
 		Connection con = dbConnect();
 		
-		
+		try{
 		if(approved){
 			String sql = "update review set status = ? where game = ? and player = ?";
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -50,23 +52,28 @@ public class JDBCReviewManager extends JDBCManager {
 		}
 		
 		con.close();
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
 	 * Lists all pending Reviews waiting to be analyzed by a moderator
 	 * @return a List containing all such Reviews
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static List<Review> getPendingReviews() throws DatabaseConnectionException, SQLException{
+	public List<Review> getPendingReviews() throws DatabaseConnectionException, QueryException{
 		List<Review> reviews = new LinkedList<Review>();
 		Connection con = dbConnect();
+		try{
 		String sql = "select * from review where status = ? and player != ?";
 		
 		PreparedStatement ps = con.prepareStatement(sql);
 		
 		ps.setString(1, "In esame");
-		ps.setString(2, JDBCUserManager.getCurrentUser().getUsername());
+		ps.setString(2, MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername());
 		
 		ResultSet rs = ps.executeQuery();
 		
@@ -80,6 +87,9 @@ public class JDBCReviewManager extends JDBCManager {
 		rs.close();
 		
 		return reviews;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
@@ -87,11 +97,13 @@ public class JDBCReviewManager extends JDBCManager {
 	 * @param game the game whose Reviews we want to read
 	 * @return a List with all said Reviews
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static List<Review> getReviewsForGame(Game game) throws DatabaseConnectionException, SQLException{
+	public List<Review> getReviewsForGame(Game game) throws DatabaseConnectionException, QueryException{
 		List<Review> reviews = new LinkedList<Review>();
 		Connection con = dbConnect();
+		try{
 		String sql = "select * from review where game = ? and status = ?";
 		
 		PreparedStatement ps = con.prepareStatement(sql);
@@ -110,19 +122,23 @@ public class JDBCReviewManager extends JDBCManager {
 		rs.close();
 		
 		return reviews;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
 	 * Stores a Review in the Database, initally waiting to be approved or rejected
 	 * @param review the Review to be stored
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 * @throws SQLException
 	 */
-	public static void sendReview(Review review) throws DatabaseConnectionException, SQLException{
+	public void sendReview(Review review) throws DatabaseConnectionException, QueryException{
 		Connection con = dbConnect();
 		String sql = "insert into review values (?, ?, ?, ?, ?)";
 		
-		
+		try{
 		PreparedStatement ps = con.prepareStatement(sql);
 		
 		ps.setString(1, review.getUsername());
@@ -136,6 +152,9 @@ public class JDBCReviewManager extends JDBCManager {
 		
 		ps.close();
 		con.close();
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 	/**
@@ -145,15 +164,17 @@ public class JDBCReviewManager extends JDBCManager {
 	 * @return true if the User has submitted a Review for the Game, false otherwise
 	 * @throws SQLException
 	 * @throws DatabaseConnectionException
+	 * @throws QueryException 
 	 */
-	public static boolean hasUserSentReviewFor(Game game) throws SQLException, DatabaseConnectionException{
+	public boolean hasUserSentReviewFor(Game game) throws DatabaseConnectionException, QueryException{
 		Connection con = dbConnect();
+		
 		String sql = "select * from review where player = ? and game = ?";
 		
-		
+		try{
 		PreparedStatement ps = con.prepareStatement(sql);
 		
-		ps.setString(1, JDBCUserManager.getCurrentUser().getUsername());
+		ps.setString(1, MysqlDAOFactory.getInstance().getMysqlUserManager().getCurrentUser().getUsername());
 		ps.setString(2, game.getGameTitle());
 		
 		ResultSet rs = ps.executeQuery();
@@ -165,6 +186,9 @@ public class JDBCReviewManager extends JDBCManager {
 		con.close();
 		
 		return result;
+		}catch(SQLException e){
+			throw new QueryException();
+		}
 	}
 	
 }

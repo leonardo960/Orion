@@ -4,14 +4,15 @@ package it.univaq.teamvisal.java.business.impl;
 import java.awt.CardLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
 import java.util.TreeMap;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.impl.utilities.ScreenFactory;
 import it.univaq.teamvisal.java.presentation.WelcomeScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
@@ -134,17 +135,17 @@ public class ScreenController {
 		window.setSize(500, 500);
 		window.addWindowListener(new WindowAdapter() {
 			  public void windowClosing(WindowEvent e) {
-			if(JDBCUserManager.isUserLogged()){
+			if( MysqlDAOFactory.getInstance().getMysqlUserManager().isUserLogged()){
 			    if(JOptionPane.showConfirmDialog(window, "Sei sicuro di voler uscire? (questo effettuerà il logout)", "Conferma uscita", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 				try {
 					logoutController.logout();
 					System.exit(0);
-				} catch (DatabaseConnectionException | SQLException e1) {
+				} catch (DatabaseConnectionException | QueryException e1) {
 					if(e1 instanceof DatabaseConnectionException){
 						if(JOptionPane.showConfirmDialog(window, "Procedura di logout fallita: database offline.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
 							System.exit(0);
 						}
-					}else if(e1 instanceof SQLException){
+					}else if(e1 instanceof QueryException){
 						if(JOptionPane.showConfirmDialog(window, "Procedura di logout fallita a causa di problemi con il database.\nSi desidera uscire comunque? (I progressi nei vari giochi non saranno salvati)") == JOptionPane.YES_OPTION){
 							System.exit(0);
 						}

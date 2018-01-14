@@ -4,9 +4,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import it.univaq.teamvisal.java.business.impl.JDBCReviewManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.business.model.Review;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
@@ -29,7 +30,6 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.TreeMap;
 import java.awt.event.ActionEvent;
@@ -132,11 +132,11 @@ public class GameReviewView extends ScreenViewSuper implements ScreenView {
 	
 	public void checkSendButtonVisibility(){
 				try {
-					leaveReview.setVisible(!(JDBCReviewManager.hasUserSentReviewFor(chosenGame)));
-				} catch (SQLException | DatabaseConnectionException e) {
+					leaveReview.setVisible(!(MysqlDAOFactory.getInstance().getMysqlReviewManager().hasUserSentReviewFor(chosenGame)));
+				} catch (QueryException | DatabaseConnectionException e) {
 					if(e instanceof DatabaseConnectionException){
 						JOptionPane.showMessageDialog(card, "Impossibile controllare se l'utente ha mandato o no la recensione: database offline.");
-					}else if(e instanceof SQLException){
+					}else if(e instanceof QueryException){
 						JOptionPane.showMessageDialog(card, "Impossibile controllare se l'utente ha mandato o no la recensione: problemi con il database.");
 					}
 					e.printStackTrace();
@@ -146,7 +146,7 @@ public class GameReviewView extends ScreenViewSuper implements ScreenView {
 		try {
 			chosenGame = game;
 			title.setText("Recensioni di: " + game.getGameTitle());
-			reviews = JDBCReviewManager.getReviewsForGame(game);
+			reviews = MysqlDAOFactory.getInstance().getMysqlReviewManager().getReviewsForGame(game);
 			listRowToReview = new TreeMap<Integer, Review>();
 			model = new DefaultListModel<String>();
 			int i = 0;
@@ -157,11 +157,11 @@ public class GameReviewView extends ScreenViewSuper implements ScreenView {
 				listRowToReview.put(i++, r);
 			}
 			list.setModel(model);
-		} catch (DatabaseConnectionException | SQLException e) {
+		} catch (DatabaseConnectionException | QueryException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensioni: database offline.");
 				ScreenController.setPreviousScreen();
-			}else if(e instanceof SQLException){
+			}else if(e instanceof QueryException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare le recensioni: problemi con il database.");
 				ScreenController.setPreviousScreen();
 			}

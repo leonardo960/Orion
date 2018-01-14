@@ -6,9 +6,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import it.univaq.teamvisal.java.business.impl.JDBCGameManager;
 import it.univaq.teamvisal.java.business.impl.ScreenController;
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Game;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenView;
 import it.univaq.teamvisal.java.presentation.utilities.ScreenViewSuper;
@@ -136,7 +137,7 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 	
 	public void populateList(){
 		try {
-			games = JDBCGameManager.listGames();
+			games = MysqlDAOFactory.getInstance().getMysqlGameManager().listGames();
 			model = new DefaultListModel<String>();
 			listRowToGame = new TreeMap<String, Game>();
 			for(Game g : games){
@@ -146,11 +147,11 @@ public class GameSelectionView extends ScreenViewSuper implements ScreenView{
 				listRowToGame.put(g.getGameTitle(), g);
 			}
 			list.setModel(model);
-		} catch (DatabaseConnectionException | SQLException e) {
+		} catch (DatabaseConnectionException | QueryException e) {
 			if(e instanceof DatabaseConnectionException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare i giochi: database offline.");
 				ScreenController.setPreviousScreen();
-			}else if(e instanceof SQLException){
+			}else if(e instanceof QueryException){
 				JOptionPane.showMessageDialog(card, "Impossibile caricare i giochi: problemi con il database.");
 				ScreenController.setPreviousScreen();
 			}

@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
 
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 import it.univaq.teamvisal.java.business.model.Game;
 /**
  * Controller class which handles all the logic concerning the startup of games.
@@ -24,9 +24,9 @@ public class GameplayController {
 	 * @throws InterruptedException 
 	 * @throws IOException
 	 * @throws DatabaseConnectionException
-	 * @throws SQLException
+	 * @throws QueryException 
 	 */
-	public void playGame(Game displayedGame) throws InterruptedException, IOException, DatabaseConnectionException, SQLException{
+	public void playGame(Game displayedGame) throws InterruptedException, IOException, DatabaseConnectionException, QueryException{
 		
 		ProcessBuilder pb = new ProcessBuilder("java", "-jar", "\"C:\\Users\\Leonardo Formichetti\\Repos\\Orion\\VideoGamePlatformDef\\games\\" + displayedGame.getGameTitle() + ".jar\"");
 		Process p;
@@ -52,7 +52,6 @@ public class GameplayController {
 	      }
 	      
 
-		//File savefile = new File("C:\\Users\\Leonardo Formichetti\\git\\VideoGamePlatformDef\\games\\savefile.txt");
 		if(!savefile.exists() || savefile == null){
 			return;
 		}else{
@@ -60,7 +59,7 @@ public class GameplayController {
 			FileReader fr = new FileReader(savefile);
 			BufferedReader br = new BufferedReader(fr);
 			exp = Integer.parseInt(br.readLine());
-			JDBCUserManager.updateUserExp(exp);
+			MysqlDAOFactory.getInstance().getMysqlUserManager().updateUserExp(exp);
 			br.close();
 			fr.close();
 			savefile.delete();

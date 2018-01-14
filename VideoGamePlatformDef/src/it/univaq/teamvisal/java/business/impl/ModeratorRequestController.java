@@ -1,8 +1,9 @@
 package it.univaq.teamvisal.java.business.impl;
 
-import java.sql.SQLException;
 
+import it.univaq.teamvisal.java.business.impl.dao.MysqlDAOFactory;
 import it.univaq.teamvisal.java.business.impl.exceptions.DatabaseConnectionException;
+import it.univaq.teamvisal.java.business.impl.exceptions.QueryException;
 
 /**
  * Controller class that handles the call to the correct DAO class to handle
@@ -18,10 +19,10 @@ public class ModeratorRequestController {
 	 * the existence of this layer
 	 * @param pitch the moderator request's pitch
 	 * @throws DatabaseConnectionException
-	 * @throws SQLException
+	 * @throws QueryException 
 	 */
-	public void sendRequest(String pitch) throws DatabaseConnectionException, SQLException{
-		JDBCUserManager.sendModRequest(pitch);
+	public void sendRequest(String pitch) throws DatabaseConnectionException, QueryException{
+		 MysqlDAOFactory.getInstance().getMysqlUserManager().sendModRequest(pitch);
 	}
 	
 }
